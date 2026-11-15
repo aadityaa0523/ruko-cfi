@@ -8,7 +8,7 @@
 
 **A free, open-source scam-call guard for Indian families.** Ruko hears the call itself, spots the scammer's script mid-sentence, warns out loud in 10 Indian languages (even in a family member's own recorded voice), turns the family's phone red, and hands over the 1930 complaint.
 
-No paid AI service, no speech API key: speech recognition and the spoken warning run in the user's own browser. MIT licensed, so any NGO, bank, telco or government body can run it.
+Speech runs on **Gnani AI** (Prisma for recognition, Timbre for the spoken warning), built for Indian code-mix. With no Gnani key, Ruko falls back to the browser's own speech recognition, so it still runs free. MIT licensed, so any NGO, bank, telco or government body can run it.
 
 ![Licence](https://img.shields.io/badge/licence-MIT-informational?style=flat-square)
 ![Languages](https://img.shields.io/badge/languages-10_Indian-informational?style=flat-square)
@@ -37,9 +37,9 @@ Ruko listens for that script.
 
 | | Feature | How |
 |---|---|---|
-| 👂 | **Hears the call itself** on speakerphone, in the language you choose | The browser's Web Speech API (Chrome); only text reaches the server, never audio |
+| 👂 | **Hears the call itself** on speakerphone, including Hindi-English code-mix | Gnani **Prisma** Realtime v3.0; free fallback: the browser's Web Speech API |
 | 🧠 | **Tracks the 4-step scam script** and warns **before the next step** ("next they'll ask for your OTP") | Ruko's risk engine scores the whole call's pattern, not single keywords |
-| 🗣️ | **Speaks the warning in 10 languages:** Hindi, Hinglish, Kannada, Telugu, Tamil, Marathi, Bengali, Gujarati, Malayalam, English. Slow for elders, or in a **family member's own recorded voice** | Browser speech synthesis; the family recording is real, never cloned |
+| 🗣️ | **Speaks the warning in 10 languages:** Hindi, Hinglish, Kannada, Telugu, Tamil, Marathi, Bengali, Gujarati, Malayalam, English. Slow for elders, or in a **family member's own recorded voice** | Gnani **Timbre**; the family recording is real, never cloned |
 | 👨‍👩‍👧 | **Family Shield:** the family's phone turns red live, with what was said and what to do; push alerts even when the page is closed | WebSockets + Web Push |
 | 📝 | **After the call:** a ready 1930 / cybercrime.gov.in complaint, a one-tap number report, a ready report for DoT's **Chakshu** | Template-based, so it never invents facts |
 | 🔎 | **Every day:** check any SMS, WhatsApp forward, link, UPI request or number; community **Scam Radar** | Rules + Supabase |
@@ -74,17 +74,17 @@ All test data is synthetic. No real users yet. Method and limits: [docs/EVALUATI
 
 ```mermaid
 flowchart LR
-    A["📱 Call on speaker"] -->|mic| B["Browser speech recognition<br/>(Web Speech API)"]
-    B -->|text only| C["Ruko risk engine<br/>pose → scare → isolate → ask"]
+    A["📱 Call on speaker"] -->|mic audio| B["Gnani Prisma<br/>(or browser speech, free)"]
+    B -->|transcript| C["Ruko risk engine<br/>pose → scare → isolate → ask"]
     C -->|alert| D["Warning in their language<br/>or a family member's recording"]
     C -->|live| E["👨‍👩‍👧 Family Shield<br/>phone turns red + push"]
     C -->|call ends| F["📝 1930 complaint pack"]
 ```
 
-1. The guard page runs in Chrome on a second device (phones can't share the mic during a call). The browser turns speech into text; each finished sentence goes to `/ws/listen` as text.
+1. The guard page runs on a second device (phones can't share the mic during a call). With a Gnani key, mic audio streams to `/ws/hear` and on to Gnani Prisma (never stored); without one, the browser turns speech into text and sends sentences to `/ws/listen`.
 2. `backend/risk.py` scores the **pattern** across the whole call (official + threat + secrecy + payment/OTP + remote app + refund trick). An alert needs two categories including a dangerous one; genuine bank safety advice is ignored.
 3. The flags map onto the four-step playbook, and Ruko warns about the **next** step.
-4. The browser speaks the warning, or plays the family member's own recording; the mic is ignored while Ruko speaks.
+4. Gnani Timbre speaks the warning (or the browser's voice as a fallback), or the family member's own recording plays; the mic is ignored while Ruko speaks.
 5. On hang-up the server builds the complaint pack from what was said.
 
 ## Run it locally
@@ -95,7 +95,7 @@ python -m venv .venv
 .venv/Scripts/python -m uvicorn backend.app:app --port 8870
 ```
 
-Open http://localhost:8870/app/ in Chrome. No API key is needed. Browsers only allow the microphone on localhost or HTTPS. Run the tests with `.venv/Scripts/python -m pytest -q`.
+Open http://localhost:8870/app/. Optional: put `GNANI_API_KEY=...` (from app.gnani.ai) in a `.env` file for Gnani speech; without it Ruko uses the browser's speech in Chrome. Browsers only allow the microphone on localhost or HTTPS. Run the tests with `.venv/Scripts/python -m pytest -q`.
 
 Deploy anywhere that runs Python with WebSockets; [`render.yaml`](render.yaml) is a free Render blueprint.
 
@@ -112,7 +112,7 @@ Deploy anywhere that runs Python with WebSockets; [`render.yaml`](render.yaml) i
 <details>
 <summary><b>Data, privacy and push alerts</b></summary>
 
-- No call audio reaches Ruko's server. Chrome's speech recognition may send audio to Google's speech service; the privacy page says so plainly.
+- Call audio is never stored. With Gnani it streams through the server to Gnani AI (India) in real time; in fallback mode Chrome may send it to Google's speech service. The privacy page says both plainly.
 - Supabase (Mumbai), row-level security on every table: `leads`, `families`, `alerts`, `number_reports` (server-side flood limits, reporter stored only as a hash). Alerts store time, level and steps only: no audio, words or numbers.
 - Family push alerts use Web Push: set `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY`.
 </details>
@@ -125,7 +125,7 @@ Deploy anywhere that runs Python with WebSockets; [`render.yaml`](render.yaml) i
 
 ## History
 
-Ruko was first built by the same developer for an earlier AI challenge, on a commercial speech API. For this hackathon it was rebuilt as an open digital public good: the paid speech service, voice cloning and the phone-line mode were removed, speech now runs in the browser, and the code is MIT licensed. Test numbers from the old speech engine were dropped rather than carried over.
+Ruko was first built by the same developer for Gnani AI's Great Indian AI Internship Challenge. For this hackathon it was rebuilt as an open digital public good: MIT licensed, a free browser-speech fallback so it runs without any paid key, a public impact counter and a spot-the-scam test; voice cloning and the phone-line mode were removed. Old test numbers were dropped rather than carried over.
 
 ## Project docs
 

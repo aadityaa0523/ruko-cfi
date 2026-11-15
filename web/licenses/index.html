@@ -6,7 +6,7 @@
 <title>Licences · Ruko</title>
 <meta name="theme-color" content="#26282b">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/ruko.css?v=34">
+<link rel="stylesheet" href="/ruko.css?v=60">
 <link rel="stylesheet" href="/legal.css?v=30">
 </head>
 <body>
@@ -23,7 +23,15 @@
   <p>© 2026 Ruko contributors. Ruko's source code is open source under the <b>MIT licence</b>: anyone, including NGOs, banks and government bodies, may use, change and share it. See the LICENSE file in the repository.</p>
 
   <h2>Speech</h2>
-  <p>Speech recognition and the spoken warning use the Web Speech API built into the user's browser. Ruko ships no speech model and needs no speech API key. The website's demo call is a written script read aloud by the browser's voice; no real person's voice or real call is used.</p>
+  <table>
+    <thead><tr><th scope="col">Service</th><th scope="col">Used for</th><th scope="col">Terms</th></tr></thead>
+    <tbody>
+      <tr><td>Gnani AI Prisma (v3.0)</td><td>Live speech recognition, when a Gnani key is set</td><td>Gnani AI terms of service</td></tr>
+      <tr><td>Gnani AI Timbre (v2.5, v3.0)</td><td>The spoken warning, when a Gnani key is set</td><td>Gnani AI terms of service</td></tr>
+      <tr><td>Web Speech API (the user's browser)</td><td>Free fallback when no key is set or Gnani is busy</td><td>The browser maker's terms</td></tr>
+    </tbody>
+  </table>
+  <p>Ruko's own code is MIT licensed and runs without any paid service; Gnani is optional. The website's demo call is a written script read aloud by the browser's voice; no real person's voice or real call is used.</p>
 
   <h2>Open-source components</h2>
   <table>

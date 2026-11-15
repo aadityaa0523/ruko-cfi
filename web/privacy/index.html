@@ -6,7 +6,7 @@
 <title>Privacy policy · Ruko</title>
 <meta name="theme-color" content="#26282b">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/ruko.css?v=34">
+<link rel="stylesheet" href="/ruko.css?v=60">
 <link rel="stylesheet" href="/legal.css?v=30">
 </head>
 <body>
@@ -34,8 +34,8 @@
 
   <h2>What Ruko processes, and why</h2>
   <h3>1. Call audio (to warn you during the call)</h3>
-  <p>When you tap <b>Protect this call</b>, your browser's own speech recognition (the Web Speech API) turns the call into words. <b>No call audio is ever sent to Ruko's server</b>; only the finished sentences, as text, are sent so Ruko can check them for scam steps.</p>
-  <p>Your browser decides how it recognises speech. Google Chrome sends the microphone audio to Google's speech service to do this (on some Android phones it is done on the phone). That is covered by Google's own privacy policy, not ours. If you don't want that, use the sample calls and the message checker, which need no microphone.</p>
+  <p>When you tap <b>Protect this call</b> on Ruko's website, your phone's microphone audio is streamed through our server to <b>Gnani AI</b>'s speech recognition (Prisma, in India) in real time, so Ruko can understand the call, and the spoken warning is made by Gnani AI (Timbre). <b>Ruko does not save this audio</b>, and it is not kept after the call.</p>
+  <p>If Ruko is run without a Gnani key (for example by someone hosting the open-source code), or when Ruko's Gnani capacity is busy, your browser's own speech recognition is used instead and only the finished sentences, as text, reach the server. Google Chrome sends the microphone audio to Google's speech service to do this; that is covered by Google's privacy policy. If you don't want either, use the sample calls and the message checker, which need no microphone.</p>
   <h3>2. What was said</h3>
   <p>Captions, the scam steps and the 1930 complaint text are shown on your screen and kept in that browser tab only. We don't store them.</p>
   <h3>3. Family Shield</h3>
@@ -72,7 +72,8 @@
   <table>
     <thead><tr><th scope="col">Provider</th><th scope="col">What for</th><th scope="col">Where</th></tr></thead>
     <tbody>
-      <tr><td>Your browser (for example Google Chrome)</td><td>Speech recognition and the spoken warning, under the browser maker's own terms</td><td>Per the browser maker</td></tr>
+      <tr><td>Gnani AI (Vachana: Prisma, Timbre)</td><td>Live speech recognition and the spoken warning</td><td>India</td></tr>
+      <tr><td>Your browser (for example Google Chrome)</td><td>Fallback speech recognition and voice, under the browser maker's own terms</td><td>Per the browser maker</td></tr>
       <tr><td>Supabase</td><td>Accounts, family list, alert records, form messages, anonymous impact counts</td><td>Mumbai, India (ap-south-1)</td></tr>
       <tr><td>Render</td><td>Hosting the website and server</td><td>Per Render's region</td></tr>
       <tr><td>jsDelivr</td><td>Delivers the sign-in library on the account page</td><td>Global CDN</td></tr>

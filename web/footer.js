@@ -19,7 +19,7 @@
     </div>
     <div class="sf-bottom">
       <p>© ${year} Ruko contributors. Open source under the MIT licence. Built in India.</p>
-      <p>Speech recognition and voice run in your own browser. Ruko only warns; it never blocks calls, and no call audio reaches Ruko's server.</p>
+      <p>Speech by Gnani AI Prisma, voice by Gnani AI Timbre (browser speech as a free fallback). Ruko only warns; it never blocks calls and never stores call audio.</p>
     </div>
   </div>`;
 })();

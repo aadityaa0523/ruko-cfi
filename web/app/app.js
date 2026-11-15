@@ -8,7 +8,7 @@ window.STRINGS = {
     sample_hint: "Playing a made-up scam call…", making_report: "Making your report…", problem: "Problem: ",
     need_mic: "Ruko needs the microphone to hear the call. Allow it and tap again.",
     no_rec: "Live listening needs Chrome (Android, Windows or Mac). Sample calls and message checks work everywhere.", no_net: "speech recognition needs the internet.",
-    audio_deleted: "No call audio left this device for Ruko's server. Only the words were checked.",
+    audio_deleted: "No call audio was stored. Only the words were checked.",
     over_bad: "Call over. Report within the hour.", over: "Call over.",
     pack_bad: "That was a scam. Your report is ready.", pack_ok: "Call over. No strong scam signs.",
     copied: "Copied", copy: "Copy complaint", copy_link: "Copy", select_copy: "Select the text above to copy",
@@ -23,7 +23,7 @@ window.STRINGS = {
     sample_hint: "एक नक़ली धोखे वाली कॉल चल रही है…", making_report: "आपकी रिपोर्ट बन रही है…", problem: "दिक़्क़त: ",
     need_mic: "कॉल सुनने के लिए Ruko को माइक्रोफ़ोन चाहिए। अनुमति दें और फिर दबाएँ।",
     no_rec: "लाइव सुनने के लिए Chrome चाहिए (Android, Windows या Mac)। नमूना कॉल और मैसेज जाँच हर जगह चलती हैं।", no_net: "आवाज़ पहचानने के लिए इंटरनेट चाहिए।",
-    audio_deleted: "कॉल की कोई आवाज़ Ruko के सर्वर पर नहीं गई। सिर्फ़ शब्द जाँचे गए।",
+    audio_deleted: "कॉल की आवाज़ कहीं सेव नहीं की गई। सिर्फ़ शब्द जाँचे गए।",
     over_bad: "कॉल ख़त्म। एक घंटे के अंदर रिपोर्ट करें।", over: "कॉल ख़त्म।",
     pack_bad: "यह धोखा था। आपकी रिपोर्ट तैयार है।", rep_caller: "दूसरों को सावधान करें: कॉलर का नंबर रिपोर्ट करें", rep_btn: "नंबर रिपोर्ट करें", pack_ok: "कॉल ख़त्म। धोखे के पक्के संकेत नहीं मिले।",
     copied: "कॉपी हो गया", copy: "शिकायत कॉपी करें", copy_link: "कॉपी", select_copy: "ऊपर का टेक्स्ट चुनकर कॉपी करें",
@@ -35,7 +35,7 @@ window.STRINGS = {
     complaint: "शिकायत, चिपकाने के लिए तैयार", fam_msg: "परिवार के लिए संदेश", play_it: "सुनाएँ",
     try: "एक नमूना धोखा कॉल चलाएँ", nomic: "माइक्रोफ़ोन नहीं चाहिए", try_p: "एक लिखी हुई नक़ली कॉल Ruko से चलती है ताकि आप देख सकें क्या होता है।",
     play: "चलाएँ",
-    foot: "Ruko सिर्फ़ चेतावनी देता है। कॉल नहीं रोकता, और कॉल की आवाज़ Ruko के सर्वर तक कभी नहीं जाती। पैसे गए? 1930 पर कॉल करें।",
+    foot: "Ruko सिर्फ़ चेतावनी देता है। कॉल नहीं रोकता, और कॉल की आवाज़ कभी सेव नहीं करता। पैसे गए? 1930 पर कॉल करें।",
     to_title: "यह धोखा है। कॉल काटिए।", to_cut: "मैंने कॉल काट दी", to_keep: "सुनते रहें",
     settings: "सेटिंग्स", speaks_in: "Ruko किस भाषा में बोले", elder: "धीरे बोले, रुक-रुककर (बुज़ुर्गों के लिए)",
     hear: "चेतावनी सुनें", done: "हो गया",
@@ -182,13 +182,16 @@ function say(text, bcp) {
   });
 }
 
+function playUrl(url, m) {
+  const a = new Audio(url);
+  a.onended = a.onerror = done;
+  return a.play().catch(() => say(m.say, m.bcp));
+}
+
 function speakWarning(m) {
   speaking = true;  // ignore what the mic hears while Ruko itself is talking
-  if (familyAudio) {
-    const a = new Audio(familyAudio);
-    a.onended = a.onerror = done;
-    return a.play().catch(() => say(m.say, m.bcp));
-  }
+  if (familyAudio) return playUrl(familyAudio, m);  // a family member's own voice comes first
+  if (m.audio) return playUrl(URL.createObjectURL(new Blob([Uint8Array.from(atob(m.audio), (c) => c.charCodeAt(0))], { type: "audio/wav" })), m);
   say(m.say, m.bcp);
 }
 
@@ -212,6 +215,37 @@ function resetView() {
 // Only finished sentences, as text, go to Ruko's server for scoring. No call audio reaches the server.
 const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec = null, listening = false;
+// Gnani engine (when the server has a key): mic audio as 16 kHz PCM16 frames over the socket
+let engine = "browser", audioCtx = null, stream = null, pending = new Int16Array(0);
+const WORKLET = `class P extends AudioWorkletProcessor{process(i){const c=i[0][0];if(c)this.port.postMessage(c.slice(0));return true}}registerProcessor('pcm',P)`;
+
+function sendPcm(floats) {
+  const next = new Int16Array(pending.length + floats.length);
+  next.set(pending);
+  for (let i = 0; i < floats.length; i++) next[pending.length + i] = Math.max(-1, Math.min(1, floats[i])) * 0x7fff;
+  let off = 0;
+  while (next.length - off >= 512) {
+    if (!speaking && ws?.readyState === WebSocket.OPEN) ws.send(next.slice(off, off + 512).buffer);
+    off += 512;
+  }
+  pending = next.slice(off);
+}
+
+async function startMic() {
+  stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, channelCount: 1 } });
+  audioCtx = new AudioContext({ sampleRate: 16000 });
+  await audioCtx.audioWorklet.addModule(URL.createObjectURL(new Blob([WORKLET], { type: "text/javascript" })));
+  const node = new AudioWorkletNode(audioCtx, "pcm");
+  node.port.onmessage = (e) => sendPcm(e.data);
+  audioCtx.createMediaStreamSource(stream).connect(node);
+}
+
+function stopMic() {
+  stream?.getTracks().forEach((tr) => tr.stop());
+  audioCtx?.close();
+  stream = audioCtx = null;
+  pending = new Int16Array(0);
+}
 
 function sendLine(text) {
   if (!speaking && text && ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: "line", text }));
@@ -237,16 +271,22 @@ function startRec() {
   rec.start();
 }
 
-async function start() {
-  if (!Rec) return ($("status").textContent = t("no_rec"));
+async function start(useEngine = engine) {
+  if (useEngine === "browser" && !Rec) return ($("status").textContent = t("no_rec"));
   resetView();
   loadFamilyVoice();
-  const q = new URLSearchParams({ lang: $("lang").value });
+  const q = new URLSearchParams({ lang: $("lang").value, elder: $("elder").checked ? 1 : 0 });
   if (familyOn()) q.set("family", familyCode);
-  ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws/listen?${q}`);
+  const path = useEngine === "gnani" ? "hear" : "listen";
+  ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws/${path}?${q}`);
+  if (useEngine === "gnani") {
+    try { await startMic(); }
+    catch { $("status").textContent = t("need_mic"); return stop(); }
+  }
   ws.onmessage = (e) => {
     const m = JSON.parse(e.data);
-    if (m.type === "connected") { listening = true; startRec(); track("guard_start", { lang: $("lang").value }); setGuard("listening", "listening", "listening_hint"); }
+    if (m.type === "busy") { ws.onclose = null; ws.close(); ws = null; stopMic(); return start("browser"); }  // key busy: free engine
+    if (m.type === "connected") { listening = true; if (useEngine === "browser") startRec(); track("guard_start", { lang: $("lang").value, level: useEngine }); setGuard("listening", "listening", "listening_hint"); }
     else if (m.type === "transcript") showRisk(m.risk, m.text);
     else if (m.type === "warning") { logAlert(lastRisk, "speaker"); alarm(); speakWarning(m); track("call_alert", { lang: $("lang").value, level: m.level }); }
     else if (m.type === "pack") {
@@ -266,6 +306,7 @@ function stop(closeWs = true) {
   listening = false;
   rec?.abort();
   rec = null;
+  stopMic();
   if (closeWs && ws?.readyState === WebSocket.OPEN) ws.close();
   ws = null;
   $("hangup").hidden = true;
@@ -277,7 +318,8 @@ $("hangup").onclick = () => {
   if (ws?.readyState !== WebSocket.OPEN) return;
   listening = false;
   rec?.stop();  // delivers the last sentence; the hang-up follows it
-  setTimeout(() => ws?.readyState === WebSocket.OPEN && ws.send(JSON.stringify({ type: "hangup" })), 800);
+  stopMic();
+  setTimeout(() => ws?.readyState === WebSocket.OPEN && ws.send(JSON.stringify({ type: "hangup" })), rec ? 800 : 0);
   $("hangup").hidden = true;
   $("status").textContent = t("making_report");
 };
@@ -307,7 +349,8 @@ const SCRIPT_NAMES = {
     for (const name of Object.keys(scripts)) og.append(new Option(SCRIPT_NAMES[name] || name.replaceAll("_", " "), JSON.stringify(scripts[name])));
     $("script").append(og);
   }
-  if (!Rec) $("status").textContent = t("no_rec");
+  engine = (await (await fetch("/api/health")).json().catch(() => ({}))).engine || "browser";
+  if (engine === "browser" && !Rec) $("status").textContent = t("no_rec");
 })();
 
 $("runScript").onclick = async () => {

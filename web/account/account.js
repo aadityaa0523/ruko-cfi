@@ -92,7 +92,7 @@ function newCode() {
 }
 const parentLink = (f) => `${location.origin}/app/?f=${f.code}&n=${encodeURIComponent(f.parent_name)}`;
 const liveLink = (f) => `/family/?c=${f.code}&n=${encodeURIComponent(f.parent_name)}`;
-const when = (iso) => new Date(iso).toLocaleString(LANG === "hi" ? "hi-IN" : "en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+const when = (iso) => new Date(iso).toLocaleString(LANG === "en" ? "en-IN" : LANG + "-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
 
 async function load() {
   const [{ data: fam }, { data: al }] = await Promise.all([
@@ -148,7 +148,7 @@ function render() {
     tr.cells[0].textContent = when(a.created_at) + (a.source === "sample" ? " (sample)" : "");
     tr.cells[1].textContent = f ? f.parent_name : "—";
     tr.cells[2].textContent = t(a.level); tr.cells[2].className = "lvl-" + a.level;
-    tr.cells[3].textContent = a.stages.map((s) => STAGE_NAME[s]?.[LANG] || s).join(" → ");
+    tr.cells[3].textContent = a.stages.map((s) => STAGE_NAME[s]?.[LANG] || window.STRINGS?.[LANG]?.["stage_" + s] || STAGE_NAME[s]?.en || s).join(" → ");
     tb.append(tr);
   }
 }

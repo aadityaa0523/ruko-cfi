@@ -1,9 +1,14 @@
 """Ruko backend: the browser hears the call (Web Speech API) and sends each line of text here; the server scores
 the call, tells the browser when to warn out loud, and on hang-up builds the golden-hour pack (evidence,
-complaint, family alert). No audio ever reaches the server.
+complaint, family alert).
+
+When GNANI_API_KEY is set, the browser can instead stream mic audio to /ws/hear, which the server passes to Gnani
+Prisma (better Indian code-mix recognition) and answers with Gnani Timbre warning audio. Audio is never stored.
 
 Run from the ruko/ folder:  .venv/Scripts/python -m uvicorn backend.app:app --port 8870
 """
+import asyncio
+import base64
 import json
 import mimetypes
 import os
@@ -13,13 +18,15 @@ from pathlib import Path
 
 from typing import Literal
 
+import websockets
+
 from fastapi import FastAPI, Header, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from backend import family as fam
-from backend import langs
+from backend import gnani, langs
 from backend.check import check_text
 from backend.pack import build_pack
 from backend.risk import CallRisk
@@ -32,13 +39,15 @@ langs.load_env(ROOT / ".env")
 
 app = FastAPI(title="Ruko")
 MAX_SESSION_S = 1800
+GNANI_LIVE = asyncio.Semaphore(3)  # one paid key: cap parallel Gnani sessions and their length
+GNANI_MAX_S = 600
 MAX_LINES = 600
 app.include_router(fam.router)
 
 
 @app.get("/api/health")
 def health():
-    return {"languages": list(langs.LANGS)}
+    return {"languages": list(langs.LANGS), "engine": "gnani" if gnani.api_key() else "browser"}
 
 
 @app.get("/api/scripts")
@@ -153,6 +162,85 @@ async def listen(ws: WebSocket, lang: str = "hi-en", family: str = ""):
         await _safe_send(ws, {"type": "error", "message": "Session limit of 30 minutes reached."})
     except (WebSocketDisconnect, ValueError):
         pass  # browser gone or sent something that is not JSON
+    finally:
+        await fam.publish(code, {"type": "call_end"})
+
+
+async def _gnani_warning(ws: WebSocket, lang: str, state: dict, code: str | None, elder: bool):
+    msg = warning_msg(lang, state)
+    try:
+        msg["audio"] = base64.b64encode(await gnani.tts(gnani.LANGS[lang]["warning"], lang, elder=elder)).decode()
+    except Exception as e:  # the browser falls back to its own voice
+        msg["error"] = str(e)[:200]
+    await _safe_send(ws, msg)
+    await fam.publish(code, msg)
+
+
+@app.websocket("/ws/hear")
+async def hear(ws: WebSocket, lang: str = "hi-en", family: str = "", elder: int = 0):
+    """Browser streams 16 kHz PCM16 frames; Gnani Prisma transcribes; same transcript/warning/pack events as /ws/listen."""
+    await ws.accept()
+    if not langs.valid_lang(lang) or not gnani.api_key():
+        await ws.close(code=1008, reason="bad lang or no speech key")
+        return
+    if GNANI_LIVE.locked():
+        await ws.send_json({"type": "busy"})  # the browser switches to its own speech recognition
+        await ws.close()
+        return
+    async with GNANI_LIVE:
+        await _hear(ws, lang, family or None, bool(elder))
+
+
+async def _hear(ws: WebSocket, lang: str, code: str | None, elder: bool):
+    risk = CallRisk()
+    await fam.publish(code, {"type": "call_start", "at": datetime.now().isoformat(timespec="seconds")})
+    started, t0 = datetime.now(), time.monotonic()
+    lines: list[dict] = []
+    hung_up = asyncio.Event()
+    try:
+        asyncio.create_task(gnani.tts(gnani.LANGS[lang]["warning"], lang, elder=elder))  # warm the cache: instant alert
+        async with websockets.connect(gnani.STT_WS, additional_headers=gnani.stt_headers(lang, "prisma-v3.0"),
+                                      max_size=None) as up:
+            async def browser_to_gnani():
+                while True:
+                    m = await ws.receive()
+                    if m["type"] == "websocket.disconnect":
+                        return
+                    if m.get("bytes"):
+                        await up.send(m["bytes"])
+                    elif m.get("text") and json.loads(m["text"]).get("type") == "hangup":
+                        await up.send(json.dumps({"type": "commit"}))  # flush the last sentence
+                        await asyncio.sleep(1.5)
+                        hung_up.set()
+                        return
+
+            async def gnani_to_browser():
+                async for raw in up:
+                    m = json.loads(raw)
+                    if m.get("type") == "transcript" and m.get("text"):
+                        state = risk.feed(m["text"])
+                        lines.append({"t": round(time.monotonic() - t0, 1), "text": m["text"], "risk": state})
+                        msg = {"type": "transcript", "text": m["text"], "risk": state}
+                        await ws.send_json(msg)
+                        await fam.publish(code, msg)
+                        if state["alert"]:
+                            asyncio.create_task(_gnani_warning(ws, lang, state, code, elder))
+                    elif m.get("type") == "connected":
+                        await ws.send_json({"type": "connected"})
+
+            tasks = [asyncio.create_task(browser_to_gnani()), asyncio.create_task(gnani_to_browser())]
+            done, pending = await asyncio.wait(tasks, timeout=GNANI_MAX_S, return_when=asyncio.FIRST_COMPLETED)
+            for t in pending:
+                t.cancel()
+            if not done:
+                await _safe_send(ws, {"type": "error", "message": "Session limit of 10 minutes reached."})
+        if hung_up.is_set():
+            pack = build_pack(lines, started, lang)
+            await ws.send_json({"type": "pack", **pack})
+            await fam.publish(code, {"type": "pack", **pack})
+            await ws.close()
+    except Exception as e:
+        await _safe_send(ws, {"type": "error", "message": f"Speech service problem: {str(e)[:160]}"})
     finally:
         await fam.publish(code, {"type": "call_end"})
 

@@ -5,11 +5,25 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, v); } catch {} },
 };
 
-// ---------- language (English / Hindi). Elements carry data-i18n="key"; dictionaries live per page in window.STRINGS.
+// ---------- language. Elements carry data-i18n="key". English and Hindi live per page in window.STRINGS;
+// the other languages load from /i18n/<code>.json (this page's section plus the shared one).
+const UI_LANGS = { en: "English", hi: "हिन्दी", ta: "தமிழ்", te: "తెలుగు", kn: "ಕನ್ನಡ", mr: "मराठी", bn: "বাংলা" };
+const I18N_PAGE = { "/": "landing", "/app/": "app", "/check/": "check", "/account/": "account" }[location.pathname];
 let LANG = store.get("ruko.ui", "en");
+if (!UI_LANGS[LANG]) LANG = "en";
 function t(key) { return (window.STRINGS?.[LANG]?.[key]) ?? (window.STRINGS?.en?.[key]) ?? key; }
+async function loadLang(lang) {
+  window.STRINGS ??= {};
+  if (lang === "en" || lang === "hi" || window.STRINGS[lang]?.__loaded) return;
+  try {
+    const d = await (await fetch(`/i18n/${lang}.json?v=1`)).json();
+    window.STRINGS[lang] = { ...(d.shared || {}), ...(d[I18N_PAGE] || {}), __loaded: true };
+  } catch { window.STRINGS[lang] = { __loaded: true }; }  // offline: English stays
+}
 function applyLang(lang) {
-  LANG = lang === "hi" ? "hi" : "en";
+  lang = UI_LANGS[lang] ? lang : "en";
+  if (lang !== "en" && lang !== "hi" && !window.STRINGS?.[lang]?.__loaded) return loadLang(lang).then(() => applyLang(lang));
+  LANG = lang;
   store.set("ruko.ui", LANG);
   document.documentElement.lang = LANG;
   for (const el of document.querySelectorAll("[data-i18n]")) el.textContent = t(el.dataset.i18n);
@@ -18,13 +32,18 @@ function applyLang(lang) {
     if (window.STRINGS?.en && !(k in window.STRINGS.en)) window.STRINGS.en[k] = el.placeholder;  // English comes from the HTML
     el.placeholder = t(k);
   }
-  for (const b of document.querySelectorAll(".lang-toggle button")) b.setAttribute("aria-pressed", String(b.dataset.lang === LANG));
+  for (const s of document.querySelectorAll(".lang-toggle select")) s.value = LANG;
   document.dispatchEvent(new Event("langchange"));
 }
-document.addEventListener("click", (e) => {
-  const b = e.target.closest(".lang-toggle button");
-  if (b) applyLang(b.dataset.lang);
-});
+// The language picker: every .lang-toggle becomes one select listing the languages in their own script.
+for (const box of document.querySelectorAll(".lang-toggle")) {
+  const sel = document.createElement("select");
+  sel.setAttribute("aria-label", "Language / भाषा");
+  for (const [code, name] of Object.entries(UI_LANGS)) sel.append(new Option(name, code));
+  sel.value = LANG;
+  sel.onchange = () => applyLang(sel.value);
+  box.replaceChildren(sel);
+}
 
 // ---------- signs
 const STAGES = [
@@ -57,7 +76,7 @@ function renderStages(el, playbook) {
     if (done.has(s.key)) li.className = "done";
     li.innerHTML = signSVG(s.key);
     const span = document.createElement("span");
-    span.textContent = s[LANG] || s.en;
+    span.textContent = s[LANG] || window.STRINGS?.[LANG]?.["stage_" + s.key] || s.en;
     li.append(span);
     el.append(li);
   }
@@ -91,7 +110,7 @@ const LEVEL = { en: { safe: "Safe", watch: "Watching", high: "Likely scam", crit
                 hi: { safe: "सुरक्षित", watch: "नज़र है", high: "शायद धोखा", critical: "धोखा" } };
 function setLevel(el, risk) {
   el.dataset.level = risk.level;
-  el.textContent = `${LEVEL[LANG][risk.level]} – ${risk.score}/100`;
+  el.textContent = `${LEVEL[LANG]?.[risk.level] ?? window.STRINGS?.[LANG]?.["level_" + risk.level] ?? LEVEL.en[risk.level]} – ${risk.score}/100`;
 }
 
 const AHEAD_ICON = '<svg viewBox="0 0 26 26" aria-hidden="true"><path d="M13 2 25 23H1z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><rect x="11.8" y="9" width="2.4" height="8" fill="currentColor"/><circle cx="13" cy="19.6" r="1.4" fill="currentColor"/></svg>';
