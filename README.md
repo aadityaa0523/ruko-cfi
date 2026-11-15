@@ -23,7 +23,9 @@ Built for **Code for a Billion: Bharat Agentic-AI Hackathon 2026** (Code for Ind
 
 ## The problem
 
-In 2024, Indians lost **₹22,845 crore** to cyber fraud, **₹1,935 crore** of it to fake "digital arrest" calls, across **1.2 lakh complaints** (Ministry of Home Affairs, replies in Parliament). The people targeted are elders at home, farmers waiting for a PM-Kisan installment, and kirana owners living on UPI.
+- **Who faces it:** every one of India's **135.4 crore** phone connections (TRAI, July 2026) can be reached by a scam call. Most exposed are the **14.9 crore** Indians aged 60+ (UNFPA India Ageing Report 2023).
+- **Reported victims:** **36.37 lakh** financial-fraud incidents were reported in 2024, up from 24.43 lakh in 2023 (Ministry of Home Affairs, Lok Sabha reply, 22 July 2025). These are only the cases people reported.
+- **Loss:** **₹22,845.73 crore** in 2024, up 206% in a year, which works out to about ₹62,800 per reported incident. Fake "digital arrest" calls alone took **₹1,935.51 crore** across **1,23,672** complaints, about ₹1.56 lakh each (MHA, Rajya Sabha reply).
 
 Caller ID checks the **number**, but scammers buy a new SIM every day. They never change the **script**:
 
