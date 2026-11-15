@@ -2,11 +2,11 @@
 End-to-end check of /ws/hear: Gnani speaks a scam call, it is streamed like a mic, Ruko must warn and build a pack."""
 import asyncio, audioop, io, json, sys, time, wave
 from pathlib import Path
-sys.path.insert(0, r"C:\Users\Aadityaa\iqoo\ruko-cfi")
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import websockets
 from backend import gnani
 
-gnani.load_env(Path(r"C:\Users\Aadityaa\iqoo\ruko-cfi\.env"))
+gnani.load_env(Path(__file__).resolve().parent.parent / ".env")
 LINES = ["Namaste, main CBI se inspector Sharma bol raha hoon.", "Aapke naam par warrant nikla hai, aapko digital arrest kiya ja raha hai.",
          "Yeh baat kisi ko mat batana, aur phone mat kaatna.", "Abhi apne account ka OTP bataiye, verification ke liye."]
 
