@@ -21,12 +21,17 @@ Ruko now hears calls with the speech recognition built into the user's browser (
 
 ## Message checker (SMS, WhatsApp, links)
 
-Two synthetic sets, each written by a separate writer who never saw the checker's rules (`eval/messages.json`, `eval/messages_test.json`). Reproduce with `.venv/Scripts/python -m eval.messages_eval messages_test`. "Warned" means Ruko said *Be careful* or *Scam*. Masked numbers in the data (`97XXXX4410`) are filled with digits before checking, because real messages carry real numbers.
+Four synthetic sets, each written by a separate writer who never saw the checker's rules. "Warned" means Ruko said *Be careful* or *Scam*. Reproduce with `.venv/Scripts/python -m eval.messages_eval <set>` (sets are in `eval/`). Masked numbers (`97XXXX4410`) are filled with digits first, because real messages carry real numbers.
 
-| Set | Use | Precision | Recall | False alarms |
+| Set | Role | Precision | Recall | False alarms |
 |---|---|---|---|---|
-| Set 1, first blind run | before any changes | 85% | 68% (41/60) | 7/60 |
-| Set 1, after improving the rules | used to improve the rules, so this number is optimistic | 100% | 92% (55/60) | 0/60 |
-| **Set 2, held out** | **scored once, nothing changed afterwards** | **92%** | **72% (36/50)** | **3/50** |
+| Set 1 (120) | used to improve the rules, so optimistic | 100% | 93% (56/60) | 0/60 |
+| Set 2 (100) | first held-out set, scored once in November; later rules changed after the page's own example failed | 95% | 82% (41/50) | 2/50 |
+| Set 3 (121) | used to improve the rules in the final round, so **optimistic** | 100% | 98% (60/61) | 0/60 |
+| **Set 4 (120)** | **blind, rules frozen in git commit `0b145db` before it was ever run; first run** | **84%** | **87% (52/60)** | **10/60** |
 
-The held-out set is the honest number. (On 15 Nov 2026 two rules were widened after the check page's own example message came back "safe"; the held-out set then scores 92.5% precision and 74% recall, but because that change was made after seeing the set, the 72% above remains the number we quote.) All 12 held-out scams with a risky link or APK were caught. What rules still miss: new scripts with no link, such as fake army buyers on OLX, "pay GST to release your LIC bonus", and polite "accidentally sent you money" messages. False alarms come from genuine ride and delivery messages that ask you to share an OTP with the driver or courier. Next step: a small trained classifier alongside the rules, evaluated the same way on a new held-out set.
+**The honest number is set 4, first run:** 87% of scams warned, but 10 of 60 genuine messages were wrongly warned about (17%). For comparison, the rules *before* this round scored 75% recall and 82% precision on the same set 4, so recall improved by about 12 points and false alarms did not.
+
+What went wrong on set 4: real OTP and KYC-branch notices in Hindi and Hinglish ("do not share your OTP", "visit your home branch"), ride and delivery codes, and a bank-awareness notice. After seeing set 4 we fixed some of those (false alarms 10 down to 7 on that set, no new ones on the other sets), but **any number measured on set 4 after that is optimistic and is not claimed**. The scams still missed are mostly scheme or subsidy forms (PM-Kisan, Ladli Behna, gas subsidy) worded in new ways.
+
+Next step: a fifth blind set to measure the false-alarm fix honestly, and a small trained classifier alongside the rules.

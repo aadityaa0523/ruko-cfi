@@ -65,7 +65,7 @@ MESSAGE_SIGNS = {
             r"(?:आईडी|खाता|आईडी).{0,25}(?:जमा|रुपये जमा)", r"(?:रुपये|रु\.?) ?जमा करें", r"\bgst\b.{0,40}(?:release|claim|pay|charge|bonus|maturity)", r"(?:pay|jama|jamaa) ?(?:karo )?gst",
             r"(?:charge|fee) (?:jama|jamaa|pay) (?:karo|kar)", r"(?:रजिस्ट्रेशन )?(?:फीस|शुल्क)", r"deposit karna",
             r"\brs\.? ?\d+ pay kar", r"pay (?:rs\.?|₹) ?\d+ (?:to|for|and)"],
-    "refund_bait": [r"(?:income tax|itr|tax)\b.{0,30}refund.{0,80}(?:verify|claim|approv|bank|link|click)", r"refund.{0,40}(?:approve hua|approved).{0,60}(?:verify|bank|link)", r"bank (?:detail|details|account detail).{0,15}verify"],
+    "refund_bait": [r"(?:income tax|itr|tax)\b.{0,30}refund.{0,80}(?:verify|claim|link|click)", r"refund.{0,40}(?:approve hua|approved).{0,60}(?:verify|bank|link)", r"bank (?:detail|details|account detail).{0,15}verify"],
     "otp_ask": [r"(?:forward|send|bhej(?:o|na)?|share).{0,25}(?:6[- ]?digit|verification|otp) ?code", r"(?:6[- ]?digit|verification) code.{0,60}(?:by mistake|accidentally|forward|bhej)", r"galti se.{0,60}code"],
     "qr_trap": [r"scan.{0,25}qr.{0,60}(?:receive|mil\b|mil jayega|aa jayega|credit|paisa)", r"qr (?:code )?scan (?:karo|kar)", r"(?:army|crpf|military|fauj|bsf|cisf|navy|air ?force).{0,80}(?:advance|qr|gpay|google pay|phonepe|payment)"],
     "benefit_bait": [r"(?:pension|scholarship|subsidy|bonus|maturity|refund).{0,50}(?:ruk(?:k)? gaya|rukk|stopped|on hold|approved|released?|pending)"],
@@ -142,7 +142,10 @@ def check_text(text: str) -> dict:
     phones = sorted({norm_phone(p) for p in PHONE_RE.findall(text)})
     # A genuine OTP delivery ("123456 is your OTP ... do not share") mentions an OTP but doesn't ask for one.
     otp_safe = re.search(r"do not share|don'?t share|never share|never asks?|share na kar|na batay|kisi ko na|share (?:the )?(?:delivery )?otp.{0,15}only with|"
-                         r"किसी को न|किसी के साथ साझा न|कभी भी.{0,40}नहीं म", low)
+                         r"किसी को न|किसी के साथ साझा न|कभी भी.{0,40}नहीं म|साझा न|शेयर न|नहीं माँगत|नहीं मांगत|nahi (?:mang|poochh|puchh)|kabhi.{0,20}otp", low)
+    # an OTP that is printed in the message is being delivered to you, not asked of you (a scammer asks "otp batao" without a code)
+    if not otp_safe and re.search(r"otp[^.\d]{0,20}\d{4,6}|\d{4,6}[^.\d]{0,15}otp|ओटीपी[^.\d]{0,15}\d{4,6}", low)             and not re.search(r"(?:forward|send me|bhej(?:o| do)|batao|bataiye|share kar(?:o|na)|screenshot)", low):
+        otp_safe = True
     if not otp_safe and re.search(r"(?:out for delivery|your (?:order|ride|shipment|package)|arriving|delivery partner|order #)", low) \
             and re.search(r"share (?:the )?otp.{0,40}(?:delivery (?:partner|agent|executive|boy)|driver|rider|only)", low):
         otp_safe = True
@@ -165,6 +168,9 @@ def check_text(text: str) -> dict:
     upi = sorted(set(UPI_RE.findall(text)))
     if upi and re.search(r"collect|request|approve|scan|pay|भेज|अनुरोध|receive", low):
         flags.append({"category": "upi_collect", "label": SIGN_LABELS["upi_collect"], "phrase": upi[0]})
+    # "never click any link" warns about links, it does not push you to click one
+    if re.search(r"(?:link|लिंक).{0,25}(?:click|क्लिक).{0,12}(?:na|mat|nahi|न|नहीं|मत)|(?:don'?t|do not|never) click", low):
+        flags = [f for f in flags if f["category"] != "remote"]
     if not phones:  # "call us" only matters when there's a private number to call
         flags = [f for f in flags if f["category"] != "callback"]
     # "Update your KYC" with nothing to click, call or pay is the bank's own reminder ("visit your branch").

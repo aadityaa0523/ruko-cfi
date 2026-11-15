@@ -1,0 +1,29 @@
+{
+  "messages": 120,
+  "scams": 60,
+  "genuine": 60,
+  "caught": 52,
+  "missed": 8,
+  "false_alarms": 7,
+  "precision": 0.881,
+  "recall": 0.867,
+  "missed_kinds": [
+    "whatsapp_code",
+    "hotel_review_task",
+    "gas_subsidy",
+    "instant_loan_fee",
+    "lic_bonus",
+    "pm_kisan",
+    "gift_parcel",
+    "ladli_behna"
+  ],
+  "false_alarm_kinds": [
+    "kyc_branch_reminder (suspicious)",
+    "ride_app (suspicious)",
+    "kyc_branch_reminder (suspicious)",
+    "kyc_branch_reminder (suspicious)",
+    "delivery_otp (suspicious)",
+    "gas_booking (suspicious)",
+    "ride_app (suspicious)"
+  ]
+}

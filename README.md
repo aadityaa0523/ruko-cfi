@@ -67,7 +67,7 @@ Every number below, with its source and what it does not prove, is on the site: 
 |---|---|
 | Scam engine on **real machine transcripts** of 14 scripted scam calls in 6 languages, recognition mistakes kept | **14/14 alarmed** |
 | Same, on 8 genuine calls (bank reminders, delivery OTP, family) | **0/8 false alarms** |
-| Message checker on 50 + 50 **held-out** messages (written blind, scored once) | **92% precision**, 72% recall |
+| Message checker on 60 + 60 **new blind** messages (written by a separate writer, **first run published**) | **84% precision, 87% recall**; 10 of 60 genuine messages wrongly flagged |
 | Live listening with browser speech recognition on a real speakerphone | **Not measured yet** |
 
 All test data is synthetic. No real users yet. Method and limits: [docs/EVALUATION.md](docs/EVALUATION.md).
