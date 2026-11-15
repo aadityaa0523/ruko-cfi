@@ -27,15 +27,10 @@ Built for **Code for a Billion: Bharat Agentic-AI Hackathon 2026** (Code for Ind
 
 ## The problem
 
-- **Who faces it:** every one of India's **135.4 crore** phone connections (TRAI, July 2026) can be reached by a scam call. Most exposed are the **14.9 crore** Indians aged 60+ (UNFPA India Ageing Report 2023).
-- **Reported victims:** **36.37 lakh** financial-fraud incidents were reported in 2024, up from 24.43 lakh in 2023 (Ministry of Home Affairs, Lok Sabha reply, 22 July 2025). These are only the cases people reported.
-- **Loss:** **₹22,845.73 crore** in 2024, up 206% in a year, which works out to about ₹62,800 per reported incident. Fake "digital arrest" calls alone took **₹1,935.51 crore** across **1,23,672** complaints, about ₹1.56 lakh each (MHA, Rajya Sabha reply).
-
-Caller ID checks the **number**, but scammers buy a new SIM every day. They never change the **script**:
-
-> **Pose** "Main CBI officer bol raha hoon" → **Scare** "Aapke khilaf warrant nikla hai" → **Isolate** "Kisi ko mat batana" → **Ask** "OTP bataiye"
-
-Ruko listens for that script.
+- **How many were hit, by the government's own count:** **36.37 lakh** financial-fraud incidents were reported in 2024, up from 24.43 lakh in 2023 (Ministry of Home Affairs, Lok Sabha reply, 22 July 2025).
+- **Why that undercounts:** in a 2025 LocalCircles survey of 32,000+ UPI users, **1 in 5** had faced fraud in three years and **51% of them never filed a complaint**. An earlier LocalCircles survey (May 2023, 32,000 responses from 331 districts) found **39% of families** had been hit by online financial fraud, and 70% of those who complained got no resolution. These are surveys, not a census, and we do not extrapolate them to a national total.
+- **Who is exposed to the phone-call version:** **135.4 crore** telephone connections (TRAI, July 2026), and especially the **14.9 crore** Indians aged 60+ (UNFPA India Ageing Report 2023).
+- **The loss:** **₹22,845.73 crore** in 2024, up 206% in a year, about ₹62,800 per reported incident. Fake "digital arrest" calls alone took **₹1,935.51 crore** across **1,23,672** complaints, about ₹1.56 lakh each (MHA, Rajya Sabha reply).
 
 ## What Ruko does
 
