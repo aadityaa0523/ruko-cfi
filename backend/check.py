@@ -39,8 +39,11 @@ UPI_RE = re.compile(r"\b[\w.-]{2,}@(?:ok\w+|ybl|ibl|axl|paytm|upi|apl|airtel|fbl
 MESSAGE_SIGNS = {
     "link_bait": [r"click (?:on )?(?:the |this )?link", r"link (?:pe|par|पर|पे) click", r"update (?:your )?kyc", r"kyc (?:update|expired|pending)",
                   r"verify (?:your )?(?:account|pan|aadhaar)", r"लिंक पर क्लिक", r"kyc अपडेट"],
-    "prize": [r"(?:you have )?won", r"lottery", r"lucky draw", r"cash ?back of", r"reward points? (?:expir|redeem)", r"इनाम", r"लॉटरी", r"kbc"],
-    "job": [r"part[- ]time job", r"work from home.{0,30}(?:earn|daily)", r"earn ₹?\s?\d[\d,]* (?:per|daily|a day)", r"like (?:and|&) subscribe.{0,20}earn", r"task.{0,20}(?:earn|commission)"],
+    "prize": [r"(?:bonus|maturity)(?: amount)?.{0,30}(?:pending|unclaimed|lying|due to you)", r"(?:you have )?won", r"lottery", r"lucky draw", r"cash ?back of", r"reward points? (?:expir|redeem)", r"इनाम", r"लॉटरी", r"kbc"],
+    "job": [r"part[- ]time job", r"work from home.{0,30}(?:earn|daily)", r"earn ₹?\s?\d[\d,]* (?:per|daily|a day)", r"like (?:and|&) subscribe.{0,20}earn", r"task.{0,20}(?:earn|commission)",
+            r"(?:like|subscribe|review|task|reels?).{0,40}(?:kamao|kamaye|कमाओ|कमाएं|कमाएँ)", r"(?:roz|daily|rozana|har din) (?:rs\.? ?)?[\d,]+ (?:kamao|kamaye|tak kamao)",
+            r"telegram (?:pe|par|group|channel|link).{0,20}(?:join|jud)", r"(?:pehla|first) task (?:free|ka)", r"(?:घर बैठे|ghar baithe).{0,50}(?:कमा|kamao|kamaye|earn)",
+            r"work from home.{0,80}(?:per month|/month|a month|महीने)"],
     "bill": [r"electricity (?:connection|power) (?:will be )?(?:disconnected|cut)", r"electricity(?: supply)? (?:will be |is being )?(?:disconnected|cut|stopped)", r"bijli (?:kat|cut)", r"बिजली.{0,40}(?:कट|काट)", r"bill (?:not|un) ?paid", r"last bill",
              r"(?:connection|power supply|gas supply|subsidy).{0,30}(?:disconnect|cut off|discontinu|kaat|kat)"],
     "callback": [r"contact (?:our )?(?:officer|executive|agent|department)", r"call (?:the |our )?(?:officer|executive|lineman|department)", r"call (?:on |us on |this number|immediately on)", r"whatsapp (?:on|us|me)", r"(?:contact|message|ping)(?: us)? on whatsapp",
@@ -55,11 +58,18 @@ MESSAGE_SIGNS = {
                   r"settle (?:the|this) matter", r"(?:वीडियो|फोटो).{0,40}(?:भेज|वायरल)"],
     "relative": [r"(?:this is )?my new number", r"phone (?:broke|is broken|kharab|toot)", r"accident ho gaya", r"(?:hospital|operation).{0,40}(?:chahiye|need|pay|bhej)",
                  r"dost bol raha", r"एक्सीडेंट", r"नया नंबर"],
-    "invest": [r"guaranteed (?:returns?|profit)", r"\d+% (?:guaranteed |assured )?(?:returns?|profit)", r"\busdt\b", r"\bcrypto\b", r"trading (?:group|tips|signals)",
+    "invest": [r"\bbitcoin\b", r"(?:double|dugna|दोगुना).{0,15}(?:paisa|paise|money|पैसा)", r"\d+ (?:din|days?) (?:me|mein|में).{0,15}(?:double|dugna)", r"guaranteed (?:returns?|profit)", r"\d+% (?:guaranteed |assured )?(?:returns?|profit)", r"\busdt\b", r"\bcrypto\b", r"trading (?:group|tips|signals)",
                r"stock tips", r"double your money", r"पैसा डबल", r"\bvip (?:group|signals)"],
-    "block": [r"(?:wallet|account|sim|mobile number|number|kyc).{0,30}(?:has been |will be |is )?(?:blocked|suspended|deactivated)", r"नंबर.{0,40}बंद कर दिया जाएग"],
-    "fee": [r"(?:registration|processing|delivery|release|customs|unlock|clearance) (?:fee|charge)", r"(?:रजिस्ट्रेशन )?(?:फीस|शुल्क)", r"deposit karna",
+    "block": [r"(?:wallet|account|sim|mobile number|number|kyc).{0,30}(?:has been |will be |is )?(?:blocked|suspended|deactivated)", r"(?:sim|number|account|card).{0,40}(?:band|bandh|बंद) (?:ho|hoga|hojayega|ho jayega|होगा|हो जाएगा)", r"kyc (?:adhoora|adhura|pending|incomplete|अधूरा)", r"नंबर.{0,40}बंद कर दिया जाएग"],
+    "fee": [r"(?:registration|processing|delivery|release|customs|unlock|clearance|activation) (?:fee|charge)", r"(?:refundable |security )?deposit.{0,50}(?:activate|required|id|account)", r"activate (?:your |the )?(?:id|account|membership)",
+            r"(?:आईडी|खाता|आईडी).{0,25}(?:जमा|रुपये जमा)", r"(?:रुपये|रु\.?) ?जमा करें", r"\bgst\b.{0,40}(?:release|claim|pay|charge|bonus|maturity)", r"(?:pay|jama|jamaa) ?(?:karo )?gst",
+            r"(?:charge|fee) (?:jama|jamaa|pay) (?:karo|kar)", r"(?:रजिस्ट्रेशन )?(?:फीस|शुल्क)", r"deposit karna",
             r"\brs\.? ?\d+ pay kar", r"pay (?:rs\.?|₹) ?\d+ (?:to|for|and)"],
+    "refund_bait": [r"(?:income tax|itr|tax)\b.{0,30}refund.{0,80}(?:verify|claim|approv|bank|link|click)", r"refund.{0,40}(?:approve hua|approved).{0,60}(?:verify|bank|link)", r"bank (?:detail|details|account detail).{0,15}verify"],
+    "otp_ask": [r"(?:forward|send|bhej(?:o|na)?|share).{0,25}(?:6[- ]?digit|verification|otp) ?code", r"(?:6[- ]?digit|verification) code.{0,60}(?:by mistake|accidentally|forward|bhej)", r"galti se.{0,60}code"],
+    "qr_trap": [r"scan.{0,25}qr.{0,60}(?:receive|mil\b|mil jayega|aa jayega|credit|paisa)", r"qr (?:code )?scan (?:karo|kar)", r"(?:army|crpf|military|fauj|bsf|cisf|navy|air ?force).{0,80}(?:advance|qr|gpay|google pay|phonepe|payment)"],
+    "benefit_bait": [r"(?:pension|scholarship|subsidy|bonus|maturity|refund).{0,50}(?:ruk(?:k)? gaya|rukk|stopped|on hold|approved|released?|pending)"],
+    "new_account": [r"(?:new|changed|different) (?:bank )?account (?:number|no\.?)", r"send (?:the )?(?:fee|money|payment|amount) to (?:the |this |our )?(?:new )?account"],
     "pay_request": [r"(?:gpay|phonepe|google pay|paytm|upi) kar (?:do|dijiye|dena)", r"(?:quick|urgent) payment", r"send (?:me|it) (?:once|now|asap|urgently)",
                     r"\d[\d,]* (?:turant )?chahiye", r"(?:bhar|bhej) do varna"],
 }
@@ -69,7 +79,9 @@ SIGN_LABELS = {"link_bait": "Pushes you to click a link or update KYC", "prize":
                "upi_collect": "UPI ID or payment request", "loan": "Instant-loan offer or loan-app harassment",
                "blackmail": "Blackmail with a video or photo", "relative": "Pretends to be family or a friend in trouble",
                "invest": "Guaranteed-returns investment or crypto tips", "block": "Says your account, wallet or SIM is blocked",
-               "fee": "Asks for a fee before you get something", "pay_request": "Asks you to pay or send money quickly"}
+               "fee": "Asks for a fee before you get something",
+               "refund_bait": "Offers a tax or other refund you must 'verify' or claim", "otp_ask": "Asks you to forward a code sent to you", "new_account": "Asks you to pay a new or changed account",
+               "qr_trap": "Asks you to scan a QR code to 'receive' money", "benefit_bait": "Says a pension, scholarship or bonus is waiting for you", "pay_request": "Asks you to pay or send money quickly"}
 ADVICE = {
     "scam": "Don't click, pay, reply or share any OTP. Block the sender. If you already paid, call 1930 now.",
     "suspicious": "Be careful. Don't click links or pay. Check with the official app or website yourself, not through this message.",
@@ -98,6 +110,10 @@ def link_flags(url: str) -> list[str]:
     tld = host.rsplit(".", 1)[-1]
     if tld in RISKY_TLDS:
         why.append(f"uses a .{tld} address, common in scams")
+    if re.search(r"gov|nic|govt|sarkari|yojana|pmkisan", host) and not host.endswith((".gov.in", ".nic.in", ".gov", ".nic")):
+        why.append("looks like a government site but is not one")
+    if {"refund", "refnd", "verify", "claim", "reward", "bonus", "kyc", "update", "lucky", "prize", "gift"} & set(re.split(r"[-.]", host)):
+        why.append("has words like refund, verify or claim in the name, common in scams")
     flat = host.replace("-", "").replace(".", "")
     brand = next((b for b in BRANDS if b in flat), None)
     if brand:
@@ -127,6 +143,9 @@ def check_text(text: str) -> dict:
     # A genuine OTP delivery ("123456 is your OTP ... do not share") mentions an OTP but doesn't ask for one.
     otp_safe = re.search(r"do not share|don'?t share|never share|never asks?|share na kar|na batay|kisi ko na|share (?:the )?(?:delivery )?otp.{0,15}only with|"
                          r"किसी को न|किसी के साथ साझा न|कभी भी.{0,40}नहीं म", low)
+    if not otp_safe and re.search(r"(?:out for delivery|your (?:order|ride|shipment|package)|arriving|delivery partner|order #)", low) \
+            and re.search(r"share (?:the )?otp.{0,40}(?:delivery (?:partner|agent|executive|boy)|driver|rider|only)", low):
+        otp_safe = True
     if otp_safe and re.search(r"\b(?:otp|pin|one[- ]time password)\b|ओटीपी", low):
         flags = [f for f in flags if f["category"] not in ("payment", "secrecy")]
     for key, pats in MESSAGE_SIGNS.items():
@@ -155,7 +174,7 @@ def check_text(text: str) -> dict:
     cats = {f["category"] for f in flags}
     # block, fee and pay_request are weak alone (real bills and family ask for money); they count with another sign.
     danger = {"callback", "threat", "secrecy", "payment", "remote", "refund_trick", "risky_link", "apk", "upi_collect", "bill", "parcel", "job", "prize",
-              "link_bait", "loan", "blackmail", "relative", "invest"}
+              "link_bait", "loan", "blackmail", "relative", "invest", "refund_bait", "otp_ask", "qr_trap", "new_account"}
     call_cats = cats & set(LABELS)
     score = round(sum(WEIGHTS[c] for c in call_cats) / MAX_SCORE * 100) + 20 * len(cats - set(LABELS))
     strong = len(cats) >= 2 and bool(cats & danger)

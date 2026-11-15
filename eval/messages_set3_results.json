@@ -1,0 +1,14 @@
+{
+  "messages": 121,
+  "scams": 61,
+  "genuine": 60,
+  "caught": 60,
+  "missed": 1,
+  "false_alarms": 0,
+  "precision": 1.0,
+  "recall": 0.984,
+  "missed_kinds": [
+    "sim_block"
+  ],
+  "false_alarm_kinds": []
+}
