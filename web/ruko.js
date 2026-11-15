@@ -134,5 +134,6 @@ async function reportNumber(number, category, channel) {
   const n = String(number).replace(/\D/g, "").slice(-10);
   if (n.length < 6 || typeof sbInsert !== "function") throw new Error("bad number");
   await sbInsert("number_reports", { number: n, category, channel, language: LANG });
+  if (typeof track === "function") track("number_report", { level: category });
   return n;
 }

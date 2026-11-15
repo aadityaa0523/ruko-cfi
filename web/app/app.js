@@ -97,7 +97,9 @@ $("familyName").oninput = () => { store.set("ruko.name", $("familyName").value.t
 $("familyOn").checked = familyOn();
 $("familyOn").onchange = () => { store.set("ruko.familyOn", $("familyOn").checked ? "1" : "0"); refreshFamily(); };
 $("familyNew").onclick = () => { familyCode = newCode(); store.set("ruko.family", familyCode); refreshFamily(); };
+$("familyWa").addEventListener("click", () => track("family_link", { level: "whatsapp" }));
 $("familyCopy").onclick = async () => {
+  track("family_link", { level: "copy" });
   try { await navigator.clipboard.writeText(familyLink()); $("familyCopy").textContent = t("copied"); }
   catch { $("familyLink").select(); }
   setTimeout(() => ($("familyCopy").textContent = t("copy_link")), 2000);
@@ -201,6 +203,7 @@ function resetView() {
   logged = new Set();
   $("captions").innerHTML = "";
   $("pack").hidden = true;
+  $("outcomeBox").hidden = true;
   $("takeover").hidden = true;
   showRisk({ level: "safe", score: 0, flags: [], new: [], playbook: null });
 }
@@ -243,10 +246,15 @@ async function start() {
   ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws/listen?${q}`);
   ws.onmessage = (e) => {
     const m = JSON.parse(e.data);
-    if (m.type === "connected") { listening = true; startRec(); setGuard("listening", "listening", "listening_hint"); }
+    if (m.type === "connected") { listening = true; startRec(); track("guard_start", { lang: $("lang").value }); setGuard("listening", "listening", "listening_hint"); }
     else if (m.type === "transcript") showRisk(m.risk, m.text);
-    else if (m.type === "warning") { logAlert(lastRisk, "speaker"); alarm(); speakWarning(m); }
-    else if (m.type === "pack") { showPack(m); $("audioNote").textContent = t("audio_deleted"); }
+    else if (m.type === "warning") { logAlert(lastRisk, "speaker"); alarm(); speakWarning(m); track("call_alert", { lang: $("lang").value, level: m.level }); }
+    else if (m.type === "pack") {
+      showPack(m); $("audioNote").textContent = t("audio_deleted");
+      track("call_pack", { lang: $("lang").value, level: m.level });
+      if (m.level === "high" || m.level === "critical")
+        askOutcome($("outcomeBox"), "Did you hang up before sharing an OTP or sending money?", "Yes, I hung up in time", "No, I had already shared or paid", "stopped_call", "lost_before_warning");
+    }
     else if (m.type === "error") $("status").textContent = t("problem") + m.message;
   };
   ws.onclose = () => stop(false);
@@ -304,6 +312,7 @@ const SCRIPT_NAMES = {
 
 $("runScript").onclick = async () => {
   resetView();
+  track("sample_call");
   window.scrollTo({ top: 0, behavior: "smooth" });
   const lines = JSON.parse($("script").value);
   const { states, pack } = await (await fetch("/api/analyze", {

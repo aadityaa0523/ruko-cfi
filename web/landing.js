@@ -125,3 +125,9 @@ $("wl").onsubmit = async (e) => {
 
 applyLang(LANG);
 fillStatic();
+
+// one counted visit per device per day
+try {
+  const day = new Date().toISOString().slice(0, 10);
+  if (localStorage.getItem("ruko.visitDay") !== day) { localStorage.setItem("ruko.visitDay", day); track("visit"); }
+} catch {}

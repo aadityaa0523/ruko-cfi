@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live impact · Ruko</title>
+<meta name="description" content="Ruko's real-world use, counted live and anonymously: people reached, scams flagged, what people say the warning changed, and a before/after scam-spotting test.">
+<meta name="theme-color" content="#26282b">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/ruko.css?v=50">
+<link rel="stylesheet" href="/legal.css?v=30">
+<style>
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 18px 0; }
+  .tiles div { border: 1px solid var(--line, #d0d4da); border-radius: 12px; padding: 14px 16px; }
+  .tiles b { display: block; font-size: 2rem; line-height: 1.1; }
+  .tiles small { display: block; margin-top: 4px; }
+  .note { border-left: 4px solid #c8102e; padding: 10px 14px; margin: 16px 0; }
+  .tablewrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header class="bar"><div class="bar-row">
+  <a class="logo" href="/" aria-label="Ruko home"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M30 2h40l28 28v40L70 98H30L2 70V30z" fill="#c8102e"/><path d="M31.7 9h36.6L91 31.7v36.6L68.3 91H31.7L9 68.3V31.7z" fill="none" stroke="#fff" stroke-width="5"/></svg>Ruko</a>
+  <nav aria-label="Ruko"><a href="/check/">Check a message</a><a href="/quiz/">Spot-the-scam test</a><a href="/impact/" aria-current="page">Results</a></nav>
+</div></header>
+
+<main class="doc">
+  <h1>Ruko's impact, counted live</h1>
+  <p class="updated" id="asOf">Loading…</p>
+  <p>Every number below comes from real use of this website, counted anonymously as it happens. Nothing is typed in by hand. Our own testing is not counted.</p>
+  <div class="note" id="status" hidden></div>
+
+  <h2>Reach</h2>
+  <div class="tiles">
+    <div><b id="devices">–</b><small>devices that used Ruko</small></div>
+    <div><b id="networks">–</b><small>different internet connections</small></div>
+    <div><b id="checks">–</b><small>messages, links or numbers checked</small></div>
+    <div><b id="guards">–</b><small>calls protected live</small></div>
+    <div><b id="families">–</b><small>family links shared</small></div>
+  </div>
+
+  <h2>Scams caught</h2>
+  <div class="tiles">
+    <div><b id="flagged">–</b><small>checks Ruko flagged as a scam or suspicious</small></div>
+    <div><b id="alerts">–</b><small>live call warnings spoken</small></div>
+    <div><b id="reports">–</b><small>scam numbers reported by users</small></div>
+  </div>
+
+  <h2>What the warning changed</h2>
+  <p>After a warning, Ruko asks one question. Answers are what people tell us, not verified.</p>
+  <div class="tiles">
+    <div><b id="stoppedMsg">–</b><small>were about to reply, click, share an OTP or pay, and didn't</small></div>
+    <div><b id="stoppedCall">–</b><small>hung up before sharing an OTP or sending money</small></div>
+    <div><b id="lost">–</b><small>had already shared or paid before the warning</small></div>
+  </div>
+
+  <h2>Do people get better at spotting scams?</h2>
+  <p>The <a href="/quiz/">spot-the-scam test</a>: six messages before and six different messages after learning the four signs of a scam. Which set comes first is random for each person, so a harder set cannot fake an improvement. Only people who finished both rounds are compared, each with themselves.</p>
+  <div class="tiles">
+    <div><b id="qN">–</b><small>finished both rounds (<span id="qStarted">–</span> started)</small></div>
+    <div><b id="qBefore">–</b><small>average score before, out of 6</small></div>
+    <div><b id="qAfter">–</b><small>average score after, out of 6</small></div>
+    <div><b id="qDiff">–</b><small>average change, with 95% interval</small></div>
+    <div><b id="qImproved">–</b><small>scored higher after</small></div>
+  </div>
+  <p class="small muted" id="qNote"></p>
+
+  <h2>By day</h2>
+  <div class="tablewrap"><table><thead><tr><th scope="col">Day (IST)</th><th scope="col">Devices</th><th scope="col">Events</th></tr></thead><tbody id="daily"></tbody></table></div>
+
+  <h2>How this is counted</h2>
+  <ul>
+    <li>Each browser gets a random id the first time it uses Ruko. We count ids, so one person on two devices counts twice, and a family sharing one phone counts once.</li>
+    <li>Stored per event: that id, what happened (for example "message checked"), the language, the verdict, and the quiz score. Never the message, a phone number, a name or an IP address. The connection is stored only as a scrambled code, to block abuse and count distinct connections.</li>
+    <li>Not counted: our own testing (localhost, or any browser that opened a Ruko page with <code>?test=1</code>). Limits stop one connection or device from flooding the numbers, and each device's quiz counts once.</li>
+    <li>The success rules were written down before counting began, in <code>docs/IMPACT_PLAN.md</code> in Ruko's public repository, with the date in its history.</li>
+  </ul>
+  <p><button class="btn btn-plain" id="dl" type="button">Download these numbers (JSON)</button></p>
+</main>
+<footer id="siteFooter"></footer>
+<script src="/config.js?v=51"></script>
+<script src="/ruko.js?v=50"></script>
+<script src="/footer.js?v=51"></script>
+<script src="impact.js?v=1"></script>
+</body>
+</html>

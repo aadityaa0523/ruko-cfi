@@ -1,0 +1,66 @@
+{
+ "A": [
+  {
+   "text": "Sir aapka bijli ka connection aaj raat kat jayega, bill update nahi hua hai. Abhi is number par call karein 97xxxx0831 aur officer ko batayein, warna meter hata diya jayega.",
+   "scam": true,
+   "why": "Threat (power cut tonight) + rush + an unknown number. Real electricity boards send bills, not midnight threats."
+  },
+  {
+   "text": "Hi, I accidentally sent Rs 12,000 to your number instead of my brother's. Please return it, I am sending you a request, just accept it to cancel. So sorry for the trouble.",
+   "scam": true,
+   "why": "The 'sent by mistake' trick: you never need to send money back to get money. A collect request takes money from you."
+  },
+  {
+   "text": "Bhai tere number pe galti se mera WhatsApp ka 6 digit code chala gaya hai, jaldi se bhej de na, mera account lock ho gaya hai. Please urgent hai.",
+   "scam": true,
+   "why": "A WhatsApp code is the key to your account. Nobody else ever needs it."
+  },
+  {
+   "text": "Dear customer, as per RBI guidelines your KYC re-verification is due. Please visit your home branch with Aadhaar and PAN before 31 Dec. No action is required on phone or link. -Union Bank of India",
+   "scam": false,
+   "why": "Asks you to visit your own branch. No link, no number to call, nothing to pay."
+  },
+  {
+   "text": "Flipkart: Aapka order (Redmi Note 14) aaj shaam tak deliver ho jayega. Delivery agent ko OTP 5532 dena. Order flipkart.com/orders par track karein.",
+   "scam": false,
+   "why": "A delivery OTP is meant for the agent at your door, for an order you placed."
+  },
+  {
+   "text": "Beta, mummy bol rahi hu. Is mahine ghar ka kharcha zyada ho gaya, ho sake to 5000 bhej dena. Aaram se, jab ho jaye tab. Khana time pe kha lena.",
+   "scam": false,
+   "why": "A known family member, no pressure, no link, no secrecy, and you can call back to check."
+  }
+ ],
+ "B": [
+  {
+   "text": "Dear Consumer, your electricity power will be disconnected tonight at 9.30 PM as previous month bill is not updated. Contact electricity officer immediately on 97xxxx4412. Thank you.",
+   "scam": true,
+   "why": "Threat (power cut tonight) + rush + an unknown number. Real electricity boards send bills, not midnight threats."
+  },
+  {
+   "text": "Bhaiya galti se aapke number pe 5000 rupaye chale gaye, plz wapas kar do. Maine ek collect request bheji hai wo approve kar dena, paisa cancel ho jayega. Bahut meherbani.",
+   "scam": true,
+   "why": "The 'sent by mistake' trick: entering your UPI PIN on a collect request sends money out, it never brings it in."
+  },
+  {
+   "text": "Hey, I just got a WhatsApp code by mistake on your number, can you please forward me the 6-digit code? It's urgent, I'm locked out of my account. Thanks a lot!",
+   "scam": true,
+   "why": "A WhatsApp code is the key to your account. Nobody else ever needs it."
+  },
+  {
+   "text": "Sir, aapka KYC update pending hai. Kripya kisi bhi link par click na karein. Apne nazdiki Bank of Baroda branch me Aadhaar aur PAN ke saath 30 Nov tak aayein. - BOB",
+   "scam": false,
+   "why": "Tells you not to click links and to visit the branch. That is how real banks talk."
+  },
+  {
+   "text": "Your Uber ride with Suresh (KA05 AB 1234, white Swift) is arriving in 3 mins. Share OTP 4471 with the driver to start the trip.",
+   "scam": false,
+   "why": "A ride OTP is shown to the driver you booked, inside the app."
+  },
+  {
+   "text": "Papa ne bola hai UPI se 2000 bhej dena mama ko, unka gas ka bill dena hai. Bhej ke screenshot dikha dena. Thanks",
+   "scam": false,
+   "why": "A family errand you can confirm with your own father. No stranger, no rush, no link."
+  }
+ ]
+}

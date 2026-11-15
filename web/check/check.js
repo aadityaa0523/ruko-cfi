@@ -58,6 +58,10 @@ async function runCheck(text) {
 
 function show(r, text) {
   $("result").hidden = false;
+  track("message_check", { level: r.verdict });
+  $("outcomeBox").hidden = true;
+  if (r.verdict !== "safe") askOutcome($("outcomeBox"), "Before Ruko warned you, were you about to reply, click the link, share an OTP or pay?",
+    "Yes, I was", "No", "stopped_message", "not_about_to");
   $("verdict").dataset.v = r.verdict;
   $("vSign").innerHTML = verdictSign(r.verdict);
   $("vWord").textContent = t("v_" + r.verdict);

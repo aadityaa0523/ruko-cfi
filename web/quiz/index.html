@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spot the scam · Ruko</title>
+<meta name="description" content="A 2-minute test: can you tell a scam message from a real one? Then learn the four signs and try again.">
+<meta name="theme-color" content="#26282b">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/ruko.css?v=50">
+<link rel="stylesheet" href="/legal.css?v=30">
+<style>
+  .msg { border: 1px solid var(--line, #d0d4da); border-radius: 12px; padding: 14px 16px; margin: 14px 0; }
+  .msg p { margin: 0 0 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .msg .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .msg button[aria-pressed="true"] { outline: 3px solid currentColor; outline-offset: 2px; }
+  .msg.right { border-color: #1f7a45; } .msg.wrong { border-color: #c8102e; }
+  .msg .why { font-size: .95em; margin: 10px 0 0; }
+  .score { font-size: 2.4rem; font-weight: 800; margin: 8px 0; }
+  .signs4 { padding-left: 1.2em; } .signs4 li { margin: 8px 0; }
+</style>
+</head>
+<body>
+<header class="bar"><div class="bar-row">
+  <a class="logo" href="/" aria-label="Ruko home"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M30 2h40l28 28v40L70 98H30L2 70V30z" fill="#c8102e"/><path d="M31.7 9h36.6L91 31.7v36.6L68.3 91H31.7L9 68.3V31.7z" fill="none" stroke="#fff" stroke-width="5"/></svg>Ruko</a>
+  <nav aria-label="Ruko"><a href="/check/">Check a message</a><a href="/impact/">Results</a></nav>
+</div></header>
+
+<main class="doc">
+  <section id="intro">
+    <h1>Can you spot the scam?</h1>
+    <p>Six real-looking messages. For each, tap <b>Scam</b> or <b>Real</b>. Then Ruko shows you the four signs every scam uses, and you try six new messages.</p>
+    <p class="small muted">Takes about 2 minutes. Anonymous: only your two scores are counted, for Ruko's public results page, to measure whether Ruko helps people spot scams. All messages are made up.</p>
+    <button class="btn btn-primary" id="start" type="button">Start</button>
+  </section>
+
+  <section id="round" hidden>
+    <h2 id="roundTitle"></h2>
+    <div id="msgs"></div>
+    <button class="btn btn-primary" id="submit" type="button" disabled>See my score</button>
+    <p class="small muted" id="left"></p>
+  </section>
+
+  <section id="lesson" hidden>
+    <p>Your score: </p><p class="score" id="score1"></p>
+    <h2>The four signs of a scam</h2>
+    <ol class="signs4">
+      <li><b>Pretends</b> to be someone you trust: bank, police, electricity office, a relative's friend.</li>
+      <li><b>Scares or rushes</b> you: "tonight", "in 2 hours", "arrest", "blocked".</li>
+      <li><b>Cuts you off</b>: "don't tell anyone", "don't hang up".</li>
+      <li><b>Asks</b> for an OTP, PIN, a code, a fee, an app install, or money "sent back".</li>
+    </ol>
+    <p>Real banks and offices never ask for an OTP or PIN, and never threaten you on the phone. When in doubt, hang up and call the official number yourself.</p>
+    <h2>Your answers</h2>
+    <div id="review"></div>
+    <button class="btn btn-primary" id="next" type="button">Try six new messages</button>
+  </section>
+
+  <section id="done" hidden>
+    <h1>Done. Thank you.</h1>
+    <p>Before: <b id="b"></b> of 6. After: <b id="a"></b> of 6.</p>
+    <p id="verdictLine"></p>
+    <div class="row"><a class="btn btn-primary" href="/check/">Check a real message</a><a class="btn btn-plain" id="shareQuiz" target="_blank" rel="noopener">Send this test to family</a></div>
+    <p class="small muted">See everyone's results, counted live: <a href="/impact/">Ruko's impact page</a>.</p>
+  </section>
+</main>
+<footer id="siteFooter"></footer>
+<script src="/config.js?v=51"></script>
+<script src="/ruko.js?v=50"></script>
+<script src="/footer.js?v=51"></script>
+<script src="quiz.js?v=1"></script>
+</body>
+</html>
