@@ -27,6 +27,8 @@ Built for **Code for a Billion: Bharat Agentic-AI Hackathon 2026** (Code for Ind
 
 ## The problem
 
+Every number below, with its source and what it does not prove, is on the site: **[ruko-cfi.onrender.com/problem](https://ruko-cfi.onrender.com/problem/)**.
+
 - **How many were hit, by the government's own count:** **36.37 lakh** financial-fraud incidents were reported in 2024, up from 24.43 lakh in 2023 (Ministry of Home Affairs, Lok Sabha reply, 22 July 2025).
 - **Why that undercounts:** in a 2025 LocalCircles survey of 32,000+ UPI users, **1 in 5** had faced fraud in three years and **51% of them never filed a complaint**. An earlier LocalCircles survey (May 2023, 32,000 responses from 331 districts) found **39% of families** had been hit by online financial fraud, and 70% of those who complained got no resolution. These are surveys, not a census, and we do not extrapolate them to a national total.
 - **Who is exposed to the phone-call version:** **135.4 crore** telephone connections (TRAI, July 2026), and especially the **14.9 crore** Indians aged 60+ (UNFPA India Ageing Report 2023).
