@@ -61,29 +61,38 @@ async def one(base, name, lines, scam, noisy, sem):
         for c in clips:
             acc += len(c) / 32000
             bounds.append(acc)
-        t0, events = time.monotonic(), []
+        events = []
         async with websockets.connect(f"{base}/ws/hear?lang={lang}", max_size=None) as ws:
+            t0 = time.monotonic()  # reset to the first audio frame below
             async def reader():
                 async for raw in ws:
                     m = json.loads(raw)
                     if m["type"] in ("warning", "pack", "busy", "error"):
                         events.append((time.monotonic() - t0, m))
             rt = asyncio.create_task(reader())
-            for c in clips:
-                for i in range(0, len(c), 1024):
-                    await ws.send(c[i:i + 1024]); await asyncio.sleep(0.032)
+            t0 = time.monotonic()
+            # pace by the clock, not by sleep(0.032): Windows sleeps in ~16 ms steps, which made audio stream ~1.5x slow
+            audio = b"".join(clips)
+            start = time.monotonic()
+            for k, i in enumerate(range(0, len(audio), 1024)):
+                await ws.send(audio[i:i + 1024])
+                delay = start + (k + 1) * 0.032 - time.monotonic()
+                if delay > 0:
+                    await asyncio.sleep(delay)
+            stream_t0 = start
             await ws.send(json.dumps({"type": "hangup"}))
             try:
                 await asyncio.wait_for(rt, 25)
             except (asyncio.TimeoutError, websockets.ConnectionClosed):
                 pass
     warns = [t for t, m in events if m["type"] == "warning"]
+    speech_end = acc - SILENCE_S  # end of the last spoken word
     pack = next((m for _, m in events if m["type"] == "pack"), {})
     err = next((m.get("message") or m["type"] for _, m in events if m["type"] in ("busy", "error")), None)
     first = warns[0] if warns else None
     sentence = next((i + 1 for i, b in enumerate(bounds) if first is not None and first <= b + 3), None) if first is not None else None
     return {"script": name, "lang": lang, "scam": scam, "noisy": noisy, "warned": bool(warns), "first_warning_s": round(first, 1) if first else None,
-            "audio_s": round(acc, 1), "after_sentence": sentence, "of_sentences": len(lines), "pack_level": pack.get("level"), "error": err}
+            "audio_s": round(acc, 1), "before_call_end": bool(first is not None and first <= speech_end), "after_sentence": sentence, "of_sentences": len(lines), "pack_level": pack.get("level"), "error": err}
 
 
 async def main(base="http://localhost:8870"):
@@ -104,7 +113,8 @@ async def main(base="http://localhost:8870"):
         sc = [r for r in res if r["scam"] and r["noisy"] == noisy and not r["error"]]
         sf = [r for r in res if not r["scam"] and r["noisy"] == noisy and not r["error"]]
         lat = sorted(r["first_warning_s"] - 0 for r in sc if r["warned"])
-        summary["noisy" if noisy else "clean"] = {"scam_calls": len(sc), "caught": sum(r["warned"] for r in sc), "genuine_calls": len(sf),
+        summary["noisy" if noisy else "clean"] = {"scam_calls": len(sc), "caught": sum(r["warned"] for r in sc),
+                                                   "warned_before_call_ended": sum(r["before_call_end"] for r in sc), "genuine_calls": len(sf),
                                                    "false_alarms": sum(r["warned"] for r in sf), "errors": sum(1 for r in res if r["noisy"] == noisy and r["error"])}
     out = {"measured": time.strftime("%Y-%m-%d"), "engine": "gnani prisma-v3.0 via /ws/hear", "summary": summary, "runs": sorted(res, key=lambda r: (r["noisy"], not r["scam"], r["script"]))}
     (HERE / "gnani_live_results.json").write_text(json.dumps(out, indent=1, ensure_ascii=False), encoding="utf-8")
