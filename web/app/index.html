@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ruko · Protect this call</title>
+<meta name="theme-color" content="#26282b">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="stylesheet" href="/ruko.css?v=50">
+<link rel="stylesheet" href="app.css?v=50">
+</head>
+<body class="app-shell" data-tab="guard">
+<header class="bar">
+  <div class="bar-row">
+    <a class="logo" href="/" aria-label="Ruko home"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M30 2h40l28 28v40L70 98H30L2 70V30z" fill="#c8102e"/><path d="M31.7 9h36.6L91 31.7v36.6L68.3 91H31.7L9 68.3V31.7z" fill="none" stroke="#fff" stroke-width="5"/></svg>Ruko</a>
+    <div class="bar-right">
+      <div class="lang-toggle" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true"><span>EN</span></button><button type="button" data-lang="hi" aria-pressed="false"><span>हिं</span></button></div>
+      <button class="icon-btn" id="familyBtn" type="button" aria-label="Family Shield"><span class="dot-on" id="familyDot"></span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16.5" cy="9" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2.5 19c.6-3.4 2.8-5.2 5.5-5.2s4.9 1.8 5.5 5.2M13.6 14.4c.9-.6 1.9-.9 2.9-.9 2.3 0 4.2 1.5 4.8 4.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <button class="icon-btn" id="settingsBtn" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="17" r="2.2" fill="none" stroke="currentColor" stroke-width="2"/></svg><span class="sr" id="langName">Hinglish</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="app">
+  <section class="guard" id="guard" data-state="idle">
+    <button class="shield" id="listen" type="button">
+      <svg class="shield-oct" viewBox="0 0 100 100" aria-hidden="true"><path d="M30 2h40l28 28v40L70 98H30L2 70V30z"/><path class="shield-rule" d="M31.7 6h36.6L94 31.7v36.6L68.3 94H31.7L6 68.3V31.7z" fill="none" stroke-width="2.2"/></svg>
+      <span class="shield-label" id="listenLabel" data-i18n="protect">Protect this call</span>
+    </button>
+    <p class="guard-hint" id="status" data-i18n="hint">Put the call on speaker and keep this device next to it, then tap. Phones can't share the microphone during a call, so open Ruko in Chrome on a second phone, tablet or laptop.</p>
+    <button class="btn btn-plain" id="hangup" type="button" hidden data-i18n="hangup">Call over: make my report</button>
+  </section>
+
+  <section class="panel live" aria-live="polite">
+    <div class="live-head">
+      <h2 data-i18n="how_far">How far the scam has gone</h2>
+      <span class="level" id="level" data-level="safe">Safe – 0/100</span>
+    </div>
+    <ol class="signs" id="stages"></ol>
+    <p class="ahead"><svg viewBox="0 0 26 26" aria-hidden="true"><path d="M13 2 25 23H1z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><rect x="11.8" y="9" width="2.4" height="8" fill="currentColor"/><circle cx="13" cy="19.6" r="1.4" fill="currentColor"/></svg><span id="next"></span></p>
+  </section>
+
+  <section class="panel">
+    <h2 data-i18n="said">What the caller said</h2>
+    <ol class="captions" id="captions" data-empty="Words appear here as the call goes on. Scam phrases turn red."></ol>
+  </section>
+
+  <section class="panel pack" id="pack" hidden aria-live="polite">
+    <h2 id="packTitle">Your report is ready</h2>
+    <p class="golden" data-i18n="golden">Report within the hour. The sooner you report, the better the chance your money can be frozen.</p>
+    <div class="row">
+      <a class="btn btn-danger" href="tel:1930" data-i18n="call1930">Call 1930 now</a>
+      <a class="btn btn-plain" href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in</a>
+    </div>
+    <form class="rep" id="repCaller" hidden>
+      <label class="field"><span data-i18n="rep_caller">Warn others: report the caller's number</span><input id="repNum" inputmode="tel" maxlength="16" placeholder="98765 43210"></label>
+      <button class="btn btn-danger" type="submit" data-i18n="rep_btn">Report number</button>
+      <p class="small muted" id="repMsg" role="status"></p>
+      <p class="small" id="repGov" hidden>Also tell the government: <button class="linkish" id="repChakshu" type="button">report on Chakshu</button> (details copied for you).</p>
+    </form>
+    <details open>
+      <summary data-i18n="complaint">Complaint, ready to paste</summary>
+      <dl class="fields" id="fields"></dl>
+      <pre class="complaint" id="complaint"></pre>
+      <button class="btn btn-plain" id="copy" type="button" data-i18n="copy">Copy complaint</button>
+    </details>
+    <details id="familyBox" hidden>
+      <summary data-i18n="fam_msg">Message for your family</summary>
+      <p id="family"></p>
+      <button class="btn btn-plain" id="playFamily" type="button" data-i18n="play_it">Play it</button>
+    </details>
+    <p class="muted small" id="audioNote"></p>
+  </section>
+
+  <section class="tools">
+    <details class="panel">
+      <summary><span data-i18n="try">Try a sample scam call</span> <span class="muted small" data-i18n="nomic">no microphone needed</span></summary>
+      <p class="muted small" data-i18n="try_p">Plays a written, made-up call through Ruko so you can see what happens. Your Family Shield screen sees it too.</p>
+      <div class="row"><select id="script" aria-label="Sample call"></select><button class="btn btn-primary" id="runScript" type="button" data-i18n="play">Play</button></div>
+    </details>
+  </section>
+
+  <p class="muted small foot" data-i18n="foot">Ruko only warns. It never blocks calls, and no call audio ever reaches Ruko's server. Lost money? Call 1930.</p>
+</main>
+
+<div class="takeover" id="takeover" hidden role="alertdialog" aria-labelledby="toTitle">
+  <div class="inner">
+    <div id="toOct"></div>
+    <h2 id="toTitle" data-i18n="to_title">It's a scam. Cut the call.</h2>
+    <p id="toReason"></p>
+    <p class="small" id="toFlags"></p>
+    <button class="btn" id="toCut" type="button" data-i18n="to_cut">I've cut the call</button>
+    <button class="btn btn-plain" id="toDismiss" type="button" data-i18n="to_keep">Keep listening</button>
+  </div>
+</div>
+
+<dialog id="settings">
+  <h2 data-i18n="settings">Settings</h2>
+  <label class="field"><span data-i18n="speaks_in">Ruko speaks in</span>
+    <select id="lang">
+      <option value="hi-en">Hinglish</option>
+      <option value="hi-IN">हिन्दी</option>
+      <option value="kn-IN">ಕನ್ನಡ</option>
+      <option value="te-IN">తెలుగు</option>
+      <option value="ta-IN">தமிழ்</option>
+      <option value="en-IN">English</option>
+      <option value="mr-IN">मराठी</option>
+      <option value="bn-IN">বাংলা</option>
+      <option value="gu-IN">ગુજરાતી</option>
+      <option value="ml-IN">മലയാളം</option>
+    </select>
+  </label>
+  <label class="check"><input type="checkbox" id="elder"> <span data-i18n="elder">Speak slowly, with pauses (for elders)</span></label>
+  <div class="row"><button class="btn btn-plain" id="testVoice" type="button" data-i18n="hear">Hear the warning</button><button class="btn btn-primary" id="settingsDone" type="button" data-i18n="done">Done</button></div>
+</dialog>
+
+<dialog id="familyDlg">
+  <h2>Family Shield</h2>
+  <p data-i18n="fam_p">Send this link to your son, daughter or a neighbour you trust. When a call turns into a scam, their phone shows it live, so they can call and break it.</p>
+  <label class="field"><span data-i18n="your_name">Your name (they'll see it)</span><input id="familyName" maxlength="30" data-i18n-ph="name_ph" placeholder="e.g. Mummy"></label>
+  <label class="field"><span data-i18n="fam_link">Family link</span><input id="familyLink" readonly></label>
+  <label class="check"><input type="checkbox" id="familyOn" checked> <span data-i18n="share">Share my calls with this link</span></label>
+  <p class="small muted" id="familyVoice"></p>
+  <div class="row"><a class="btn btn-primary" id="familyWa" target="_blank" rel="noopener" data-i18n="wa">Send on WhatsApp</a><button class="btn btn-plain" id="familyCopy" type="button" data-i18n="copy_link">Copy</button></div>
+  <div class="row"><button class="btn btn-plain" id="familyNew" type="button" data-i18n="new_link">Make a new link</button><button class="btn btn-plain" id="familyDone" type="button" data-i18n="done">Done</button></div>
+</dialog>
+
+<script src="/config.js?v=50"></script>
+<script src="/ruko.js?v=50"></script>
+<script src="/tabs.js?v=50"></script>
+<script src="app.js?v=50"></script>
+</body>
+</html>

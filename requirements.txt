@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+httpx
+websockets>=13
+pytest
+python-multipart
+pywebpush>=2.0
