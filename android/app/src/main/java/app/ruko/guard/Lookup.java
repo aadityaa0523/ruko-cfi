@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 /** Looks up a number in Ruko's community reports (Supabase RPC number_lookup). */
 final class Lookup {
-    static final String SITE = "https://ruko-ohn2.onrender.com";
+    static final String SITE = "https://ruko-cfi.onrender.com";
     static final String SUPABASE_URL = "https://izxqlbipvrtnsvpwekaw.supabase.co";
     // Publishable key: public by design (same as web/config.js); row-level security protects the data.
     static final String SUPABASE_KEY = "sb_publishable_M8we6sPJuWsmIZOZuKQbrQ_pivd7C1I";

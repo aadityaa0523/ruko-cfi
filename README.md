@@ -81,7 +81,7 @@ Ruko listens for that script, in the way India actually speaks, and steps in bef
 | 🧪 | **Spot-the-scam test:** 6 messages, the four signs, 6 new messages; anonymous before/after scores | Random set order per person, so a harder set cannot fake an improvement |
 | 📲 | **Share in one tap:** ready WhatsApp messages in 7 languages for the test and the checker | [`/share/`](https://ruko-cfi.onrender.com/share/) |
 | 🏦 | **Score API for banks and UPI apps:** check a customer's live call before money moves | `POST /v1/score` → `{"level": "critical", "score": 92, ...}` |
-| 🤖 | **Android app:** warns about reported numbers while they ring | `CallScreeningService` ([`android/`](android)), not yet tested on real devices |
+| 🤖 | **Android app:** warns about reported numbers while they ring. **[Download the APK (preview)](https://github.com/aadityaa0523/ruko-cfi/releases/tag/v0.2.0-android-preview)** | `CallScreeningService` ([`android/`](android)); debug-signed, not yet tested on real devices |
 
 ## Built to work with India's own systems
 
