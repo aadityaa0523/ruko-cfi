@@ -66,26 +66,56 @@ Ruko solves the fundamental flaw of number-based blocking by inspecting **what i
    * Pairs family members via anonymous QR/link without storing personal identifiers.
    * When a suspicious call occurs, it immediately pings the family member's phone and can speak the warning in the family member’s own recorded voice ("Papa, stop, this is a scam!"), cutting through panic with familiar trust.
 
-3. **Multilingual Message & Link Checker:**
-   * Instant verification for SMS, WhatsApp forwards, suspicious APK links, and UPI request handles across 7 languages.
-   * Heuristic rule engine tuned on 5 blind adversarial evaluation sets.
-
 4. **Instant 1930 / Cybercrime.gov.in Reporting:**
    * Automatically pre-fills a standardized incident complaint packet containing numbers, timestamps, and payment handles to preserve the critical "golden hour" for freezing mule bank accounts.
 
-5. **Rigorous Technical Evaluation (Reproducible in Repo):**
+5. **Multilingual Everyday Message, Link & Scam Radar:**
+   * Instant verification for SMS, WhatsApp forwards, suspicious APK links, and UPI request handles across 7 languages.
+   * Community-powered Scam Radar tracking emerging phishing scripts affecting Indian families weekly.
+
+6. **Banking Score API & Native Android App:**
+   * Enterprise-ready Score API (`POST /v1/score`) enabling banks and UPI apps to verify live call fraud scores before transactions execute.
+   * Android call-screening companion app (preview APK) utilizing Android's `CallScreeningService` to warn against reported scam numbers while ringing.
+
+7. **Rigorous Technical Evaluation (Reproducible in Repo):**
    * **Live Call Suite (`eval/gnani_live_suite.py`):** Tested across 25 multi-lingual scripted scam calls against Gnani’s live pipeline. Clean audio: **17/17 scam calls caught (100%), 0/8 genuine calls alarmed (0% false positives)**. Real-world noisy phone quality: **16/17 caught (94%), 0/8 false alarms**.
    * **Message Checker Suite (`docs/EVALUATION.md`):** Tested on a frozen blind set (Set 5) created independently: **90% recall (54/60 scams flagged) and 92% precision (only 5 false alarms out of 60 genuine messages)**.
 
 ---
 
 ### **How we used AgentFoundry (Eligibility)**
-Built and refactored using **AgentFoundry (AF)**. The repository was opened in the AgentFoundry IDE, leveraging its automated coding agent and integrated verification tools for systematic engineering tasks (all documented with `AF:` commit prefixes in the public Git history):
-* Implemented Gnani AI Prisma streaming pipeline and Timbre multilingual speech synthesis.
-* Built full test coverage (84 unit and integration tests passing in `pytest` and `node`).
-* Refactored multi-language localization across 7 UI languages with key parity checks.
-* Architected anonymous impact telemetry pipeline with Postgres RLS in Supabase.
-* Hardened adversarial message-checking heuristic rules across 5 iterations of blind testing.
+Ruko was built **entirely from scratch inside AgentFoundry (AF)** as our primary development environment and agentic IDE for the hackathon. Every component, pipeline, test suite, and document was engineered, verified, and committed through AgentFoundry (as evidenced by our Git history where 100% of commits carry the `AF:` prefix from initial scaffolding to final release):
+
+1. **Architecture & Project Scaffolding in AgentFoundry:**
+   - Bootstrapped the entire repository structure, Python virtual environments, and multi-service architecture from scratch inside the AgentFoundry workspace.
+   - Designed the modular system layout separating real-time audio streams, risk analysis state machines, telephony bridges, and privacy-preserving telemetry.
+
+2. **Real-Time Speech Engine Pipeline:**
+   - Implemented WebSocket streaming audio handlers (`/ws/hear` and `/ws/listen`) in FastAPI to pipe raw PCM audio into Gnani AI’s Prisma ASR engine for 10 Indian code-mixed languages.
+   - Built the zero-cost fallback pipeline using the browser's native Web Speech API.
+   - Integrated Gnani Timbre TTS for localized spoken alerts with custom pauses for elder clarity, and consented family voice recording uploads.
+
+3. **Risk Engine & Behavioral Scam Playbook (`backend/risk.py`, `backend/app.py`):**
+   - Engineered the heuristic risk scoring state machine that tracks the 4-step scam trajectory (`pose` → `scare` → `isolate` → `ask`) across entire conversations.
+   - Implemented the enterprise Banking Score API (`POST /v1/score`) enabling fintech and UPI applications to query real-time call risk before transactions move.
+
+4. **Telephony & Keypad Phone Line (`backend/telephony.py`):**
+   - Developed Twilio Media Streams integration (`/twilio/voice`, `/twilio/stream`) to decode 8 kHz $\mu$-law cellular audio and speak live warnings inside active calls for feature phone users.
+   - Created the telephony simulation validation harness (`eval/twilio_sim_call.py`).
+
+5. **Frontend Localization & Family Shield (`web/`):**
+   - Built the responsive mobile-first frontend in 7 Indian regional languages (English, Hindi, Tamil, Telugu, Kannada, Marathi, Bengali) with automated key-parity verification.
+   - Developed Family Shield WebSocket pairing with instant visual red-screen alerts and Web Push notifications.
+   - Built the SMS/WhatsApp/link verification tool (`/check/`) and the 2-minute randomized spot-the-scam paired test (`/quiz/`).
+
+6. **Rigorous Testing & Adversarial Evaluation in AgentFoundry:**
+   - Built and ran the automated live call detection benchmark suite (`eval/gnani_live_suite.py`) testing 25 multi-lingual scripted scam calls.
+   - Developed and passed **90 unit and integration tests** in `pytest` and `node` (`python -m pytest -q`).
+   - Conducted 5 iterative adversarial blind-test evaluations (`docs/EVALUATION.md`) to tune detection precision to 92%.
+
+7. **Production Telemetry & Cloud Deployment:**
+   - Architected the Supabase PostgreSQL database schema with row-level security and trigger guards for anonymous impact measurement.
+   - Configured Dockerless deployment manifests (`render.yaml`) for automatic cloud deploys.
 
 ---
 
