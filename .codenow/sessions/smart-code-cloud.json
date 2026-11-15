@@ -1,0 +1,328 @@
+{
+  "savedAt": "2026-11-15T12:06:24.804Z",
+  "messages": [
+    {
+      "role": "user",
+      "content": "In this repo (Ruko, FastAPI backend in backend/, tests in tests/), add a test in\ntests/test_startup.py that calls GET /api/health with the FastAPI TestClient and\nasserts it returns 200 with a \"languages\" list of 10 entries and an \"engine\" value\nthat is either \"gnani\" or \"browser\". Run .venv/Scripts/python -m pytest -q and make\nsure everything passes. Then commit with a message starting \"AF: \"."
+    },
+    {
+      "role": "assistant",
+      "content": "I'll help you add a test for the health endpoint. Let me start by exploring the repository structure.",
+      "toolUses": [
+        {
+          "id": "toolu_011q9A9poo4v5EyGeMdFt1TP",
+          "name": "list_files",
+          "input": {
+            "path": "."
+          },
+          "status": "done",
+          "preview": "📄 android\n📄 backend\n📄 docs\n📄 eval\n📄 supabase\n📄 tests\n📄 web\n📄 .gitignore\n📄 DESIGN.md\n📄 LICENSE\n📄 PRODUCT.md\n📄…"
+        },
+        {
+          "id": "toolu_018vbLDjEqRZoFjF1vRYH1D9",
+          "name": "list_files",
+          "input": {
+            "path": "backend"
+          },
+          "status": "done",
+          "preview": "📄 __pycache__\n📄 __init__.py\n📄 app.py\n📄 check.py\n📄 family.py\n📄 gnani.py\n📄 langs.py\n📄 pack.py\n📄 risk.py\n📄 script…"
+        },
+        {
+          "id": "toolu_01Gq3D5EpDM7AEXg6XM3sXSg",
+          "name": "list_files",
+          "input": {
+            "path": "tests"
+          },
+          "status": "done",
+          "preview": "📄 __init__.py\n📄 test_check.py\n📄 test_impact_stats.js\n📄 test_pack.py\n📄 test_risk.py\n📄 test_startup.py"
+        }
+      ],
+      "routingInfo": {
+        "provider": "anthropic",
+        "model": "claude-haiku-4-5-20251001",
+        "trace": [
+          {
+            "signal": "FAST_INTENT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "DEEP_INTENT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "REASONING",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "HUGE_CONTEXT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "LONG_THREAD",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "STACK_TRACE",
+            "matched": false,
+            "evidence": null
+          }
+        ],
+        "decidedReason": "DEFAULT",
+        "isExplicit": false,
+        "speculative": false
+      },
+      "provider": "anthropic",
+      "model": "claude-haiku-4-5-20251001"
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_011q9A9poo4v5EyGeMdFt1TP",
+          "content": "📄 android\n📄 backend\n📄 docs\n📄 eval\n📄 supabase\n📄 tests\n📄 web\n📄 .gitignore\n📄 DESIGN.md\n📄 LICENSE\n📄 PRODUCT.md\n📄 README.md\n📄 render.yaml\n📄 requirements.txt",
+          "is_error": false
+        },
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_018vbLDjEqRZoFjF1vRYH1D9",
+          "content": "📄 __pycache__\n📄 __init__.py\n📄 app.py\n📄 check.py\n📄 family.py\n📄 gnani.py\n📄 langs.py\n📄 pack.py\n📄 risk.py\n📄 scripts.py",
+          "is_error": false
+        },
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_01Gq3D5EpDM7AEXg6XM3sXSg",
+          "content": "📄 __init__.py\n📄 test_check.py\n📄 test_impact_stats.js\n📄 test_pack.py\n📄 test_risk.py\n📄 test_startup.py",
+          "is_error": false
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": "Good! Now let me check the existing test_startup.py and the FastAPI app to understand the structure:",
+      "toolUses": [
+        {
+          "id": "toolu_017GzvcGtxijfikm4KzbjzvE",
+          "name": "read_file",
+          "input": {
+            "path": "tests/test_startup.py"
+          },
+          "status": "done",
+          "preview": "```\n// tests/test_startup.py\nfrom fastapi.testclient import TestClient\r\n\r\nfrom backend import app as appmod\r\nfrom backen…"
+        },
+        {
+          "id": "toolu_01L1gRBsnAeP2qtxkcrJfw8E",
+          "name": "read_file",
+          "input": {
+            "path": "backend/app.py"
+          },
+          "status": "done",
+          "preview": "```\n// backend/app.py\n\"\"\"Ruko backend: the browser hears the call (Web Speech API) and sends each line of text here; the…"
+        }
+      ],
+      "routingInfo": {
+        "provider": "anthropic",
+        "model": "claude-haiku-4-5-20251001",
+        "trace": [
+          {
+            "signal": "FAST_INTENT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "DEEP_INTENT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "REASONING",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "HUGE_CONTEXT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "LONG_THREAD",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "STACK_TRACE",
+            "matched": false,
+            "evidence": null
+          }
+        ],
+        "decidedReason": "DEFAULT",
+        "isExplicit": false,
+        "speculative": false
+      },
+      "provider": "anthropic",
+      "model": "claude-haiku-4-5-20251001"
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_017GzvcGtxijfikm4KzbjzvE",
+          "content": "```\n// tests/test_startup.py\nfrom fastapi.testclient import TestClient\r\n\r\nfrom backend import app as appmod\r\nfrom backend.app import app\r\n\r\nclient = TestClient(app)\r\nLINES = [\"Main CBI se bol raha hoon\", \"aapke naam warrant hai\", \"kisi ko mat batana\"]\r\n\r\n\r\ndef test_score_api_needs_key_and_returns_playbook():\r\n    assert client.post(\"/v1/score\", json={\"lines\": LINES}).status_code == 401\r\n    r = client.post(\"/v1/score\", json={\"lines\": LINES}, headers={\"X-Ruko-Key\": \"demo\"}).json()\r\n    assert r[\"level\"] in (\"high\", \"critical\") and r[\"playbook\"][\"next\"]\r\n\r\n\r\ndef test_waitlist_validates_and_stores(tmp_path, monkeypatch):\r\n    monkeypatch.setattr(appmod, \"WAITLIST\", tmp_path / \"w.jsonl\")\r\n    lead = {\"name\": \"Asha\", \"contact\": \"asha@example.com\", \"role\": \"family\", \"consent\": True}\r\n    assert client.post(\"/api/waitlist\", json={**lead, \"consent\": False}).status_code == 422\r\n    assert client.post(\"/api/waitlist\", json={**lead, \"role\": \"spam\"}).status_code == 422\r\n    assert client.post(\"/api/waitlist\", json=lead).json() == {\"ok\": True}\r\n    assert \"Asha\" in (tmp_path / \"w.jsonl\").read_text(encoding=\"utf-8\")\r\n\r\n\r\ndef test_family_screen_gets_live_events_and_replay():\r\n    code = \"abcd2345ef\"\r\n    with client.websocket_connect(f\"/ws/family?c={code}\") as fam:\r\n        client.post(\"/api/family/publish\", json={\"code\": code, \"msg\": {\"type\": \"call_start\"}})\r\n        client.post(\"/api/family/publish\", json={\"code\": code, \"msg\": {\"type\": \"warning\", \"audio\": \"xx\", \"level\": \"high\"}})\r\n        client.post(\"/api/family/publish\", json={\"code\": code, \"msg\": {\"type\": \"evil\"}})\r\n        assert fam.receive_json()[\"type\"] == \"call_start\"\r\n        w = fam.receive_json()\r\n        assert w[\"type\"] == \"warning\" and \"audio\" not in w\r\n    with client.websocket_connect(f\"/ws/family?c={code}\") as late:  # joins late: replay\r\n        assert [late.receive_json()[\"type\"] for _ in range(2)] == [\"call_start\", \"warning\"]\r\n\r\n\r\ndef test_family_rejects_bad_code():\r\n    import pytest\r\n    from starlette.websockets import WebSocketDisconnect\r\n    with pytest.raises(WebSocketDisconnect):\r\n        with client.websocket_connect(\"/ws/family?c=BAD!\") as ws:\r\n            ws.receive_json()\r\n\r\n\r\ndef test_listen_scores_text_lines_warns_and_builds_pack():\r\n    code = \"listen2345\"\r\n    with client.websocket_connect(f\"/ws/family?c={code}\") as fam,             client.websocket_connect(f\"/ws/listen?lang=hi-en&family={code}\") as ws:\r\n        assert ws.receive_json()[\"type\"] == \"connected\"\r\n        got = []\r\n        for line in LINES + [\"OTP bataiye abhi\"]:\r\n            ws.send_json({\"type\": \"line\", \"text\": line})\r\n            got.append(ws.receive_json())\r\n            if got[-1][\"risk\"][\"alert\"]:\r\n                warn = ws.receive_json()\r\n                assert warn[\"type\"] == \"warning\" and warn[\"bcp\"] == \"hi-IN\" and \"ओ टी पी\" in warn[\"say\"]\r\n        assert any(m[\"risk\"][\"alert\"] for m in got)\r\n        ws.send_json({\"type\": \"hangup\"})\r\n        pack = ws.receive_json()\r\n        assert pack[\"type\"] == \"pack\" and pack[\"level\"] in (\"high\", \"critical\") and \"1930\" not in pack[\"complaint\"][\"category\"]\r\n        assert fam.receive_json()[\"type\"] == \"call_start\"\r\n\r\n\r\ndef test_listen_rejects_unknown_language():\r\n    import pytest\r\n    from starlette.websockets import WebSocketDisconnect\r\n    with pytest.raises(WebSocketDisconnect):\r\n        with client.websocket_connect(\"/ws/listen?lang=xx\") as ws:\r\n            ws.receive_json()\r\n\r\n\r\ndef test_family_voice_needs_consent_wav_and_can_be_deleted():\r\n    wav = {\"file\": (\"v.wav\", b\"RIFF\" + b\"\\0\" * 20000, \"audio/wav\")}\r\n    c = \"voicefam23\"\r\n    assert client.post(\"/api/family/voice\", data={\"c\": c, \"consent\": \"false\"}, files=wav).status_code == 400\r\n    short = {\"file\": (\"v.wav\", b\"RIFF\" + b\"\\0\" * 100, \"audio/wav\")}\r\n    assert client.post(\"/api/family/voice\", data={\"c\": c, \"consent\": \"true\"}, files=short).status_code == 400\r\n    notwav = {\"file\": (\"v.wav\", b\"\\0\" * 20000, \"audio/wav\")}\r\n    assert client.post(\"/api/family/voice\", data={\"c\": c, \"consent\": \"true\"}, files=notwav).status_code == 400\r\n    ok = client.post(\"/api/family/voice\", data={\"c\": c, \"consent\": \"true\", \"name\": \"Rahul\"}, files=wav)\r\n    assert ok.json() == {\"ok\": True}\r\n    assert client.get(f\"/api/family/voice?c={c}\").json() == {\"has_voice\": True, \"name\": \"Rahul\"}\r\n    assert client.get(f\"/api/family/voice/audio?c={c}\").content.startswith(b\"RIFF\")\r\n    assert client.delete(f\"/api/family/voice?c={c}\").json() == {\"deleted\": True}\r\n    assert client.get(f\"/api/family/voice/audio?c={c}\").status_code == 404\r\n\r\n\r\ndef test_push_subscribe_and_one_push_per_call(monkeypatch):\r\n    from backend import family\r\n    sent = []\r\n    monkeypatch.setenv(\"VAPID_PRIVATE_KEY\", \"x\")\r\n    monkeypatch.setattr(family, \"_send_push\", lambda sub, payload: sent.append(payload) or True)\r\n    c = \"pushfam234\"\r\n    sub = {\"endpoint\": \"https://push.example.com/abc\", \"keys\": {\"p256dh\": \"k\", \"auth\": \"a\"}}\r\n    assert client.post(\"/api/push/subscribe\", json={\"c\": c, \"name\": \"Mummy\", \"subscription\": {\"endpoint\": \"http://x\"}}).status_code == 400\r\n    assert client.post(\"/api/push/subscribe\", json={\"c\": c, \"name\": \"Mummy\", \"subscription\": sub}).json() == {\"ok\": True}\r\n    for msg in ({\"type\": \"call_start\"}, {\"type\": \"transcript\", \"text\": \"t\", \"risk\": {\"playbook\": {\"next\": \"Next they will ask for an OTP.\"}}},\r\n                {\"type\": \"warning\", \"level\": \"high\"}, {\"type\": \"warning\", \"level\": \"critical\"}):\r\n        client.post(\"/api/family/publish\", json={\"code\": c, \"msg\": msg})\r\n    assert len(sent) == 1 and sent[0][\"title\"] == \"Mummy is on a scam call right now\" and \"OTP\" in sent[0][\"body\"]\r\n\n```",
+          "is_error": false
+        },
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_01L1gRBsnAeP2qtxkcrJfw8E",
+          "content": "```\n// backend/app.py\n\"\"\"Ruko backend: the browser hears the call (Web Speech API) and sends each line of text here; the server scores\r\nthe call, tells the browser when to warn out loud, and on hang-up builds the golden-hour pack (evidence,\r\ncomplaint, family alert).\r\n\r\nWhen GNANI_API_KEY is set, the browser can instead stream mic audio to /ws/hear, which the server passes to Gnani\r\nPrisma (better Indian code-mix recognition) and answers with Gnani Timbre warning audio. Audio is never stored.\r\n\r\nRun from the ruko/ folder:  .venv/Scripts/python -m uvicorn backend.app:app --port 8870\r\n\"\"\"\r\nimport asyncio\r\nimport base64\r\nimport json\r\nimport mimetypes\r\nimport os\r\nimport time\r\nfrom datetime import datetime\r\nfrom pathlib import Path\r\n\r\nfrom typing import Literal\r\n\r\nimport websockets\r\n\r\nfrom fastapi import FastAPI, Header, WebSocket, WebSocketDisconnect\r\nfrom fastapi.responses import JSONResponse\r\nfrom fastapi.staticfiles import StaticFiles\r\nfrom pydantic import BaseModel, Field\r\n\r\nfrom backend import family as fam\r\nfrom backend import gnani, langs\r\nfrom backend.check import check_text\r\nfrom backend.pack import build_pack\r\nfrom backend.risk import CallRisk\r\nfrom backend.scripts import SAFE, SCAM\r\n\r\nROOT = Path(__file__).resolve().parent.parent\r\nmimetypes.add_type(\"application/manifest+json\", \".webmanifest\")\r\nWAITLIST = ROOT / \"data\" / \"waitlist.jsonl\"\r\nlangs.load_env(ROOT / \".env\")\r\n\r\napp = FastAPI(title=\"Ruko\")\r\nMAX_SESSION_S = 1800\r\nGNANI_LIVE = asyncio.Semaphore(3)  # one paid key: cap parallel Gnani sessions and their length\r\nGNANI_MAX_S = 600\r\nMAX_LINES = 600\r\napp.include_router(fam.router)\r\n\r\n\r\n@app.get(\"/api/health\")\r\ndef health():\r\n    return {\"languages\": list(langs.LANGS), \"engine\": \"gnani\" if gnani.api_key() else \"browser\"}\r\n\r\n\r\n@app.get(\"/api/scripts\")\r\ndef scripts():\r\n    return {\"scam\": SCAM, \"safe\": SAFE}\r\n\r\n\r\nclass Lines(BaseModel):\r\n    lines: list[str]\r\n    lang: str = \"hi-en\"\r\n\r\n\r\n@app.post(\"/api/analyze\")\r\ndef analyze(body: Lines):\r\n    \"\"\"Text test mode: score a call line by line without audio, and build its pack.\"\"\"\r\n    risk = CallRisk()\r\n    states = [risk.feed(line) for line in body.lines]\r\n    lines = [{\"t\": i * 4.0, \"text\": t, \"risk\": s} for i, (t, s) in enumerate(zip(body.lines, states))]\r\n    return {\"states\": states, \"pack\": build_pack(lines, datetime.now(), body.lang if langs.valid_lang(body.lang) else \"hi-en\")}\r\n\r\n\r\nclass Lead(BaseModel):\r\n    name: str = Field(min_length=1, max_length=60)\r\n    contact: str = Field(min_length=3, max_length=100)\r\n    role: Literal[\"family\", \"self\", \"bank\", \"telco\", \"police\", \"other\"]\r\n    consent: Literal[True]\r\n\r\n\r\n@app.post(\"/api/waitlist\")\r\ndef waitlist(lead: Lead):\r\n    \"\"\"Pilot sign-ups. shortcut: a JSONL file on local disk, move to a database before relying on it in production.\"\"\"\r\n    WAITLIST.parent.mkdir(exist_ok=True)\r\n    with WAITLIST.open(\"a\", encoding=\"utf-8\") as f:\r\n        f.write(json.dumps({**lead.model_dump(), \"at\": datetime.now().isoformat(timespec=\"seconds\")}, ensure_ascii=False) + \"\\n\")\r\n    return {\"ok\": True}\r\n\r\n\r\nclass ScoreRequest(BaseModel):\r\n    lines: list[str] = Field(min_length=1, max_length=200)\r\n\r\n\r\n@app.post(\"/v1/score\")\r\ndef score(body: ScoreRequest, x_ruko_key: str = Header(\"\")):\r\n    \"\"\"Partner API: score a call's transcript lines for scam steps. Key \"demo\" is public and capped at 20 lines.\"\"\"\r\n    keys = {k.strip() for k in os.environ.get(\"RUKO_PARTNER_KEYS\", \"\").split(\",\") if k.strip()}\r\n    if x_ruko_key not in keys and not (x_ruko_key == \"demo\" and len(body.lines) <= 20):\r\n        return JSONResponse({\"error\": \"missing or invalid X-Ruko-Key\"}, status_code=401)\r\n    risk = CallRisk()\r\n    for line in body.lines:\r\n        state = risk.feed(line[:2000])\r\n    return {k: state[k] for k in (\"level\", \"score\", \"flags\", \"playbook\")}\r\n\r\n\r\nclass CheckRequest(BaseModel):\r\n    text: str = Field(min_length=1, max_length=4000)\r\n\r\n\r\n@app.post(\"/api/check\")\r\ndef check(body: CheckRequest):\r\n    \"\"\"Check a message, link, UPI request or number (no audio, nothing stored).\"\"\"\r\n    return check_text(body.text)\r\n\r\n\r\ndef warning_msg(lang: str, state: dict) -> dict:\r\n    \"\"\"The browser speaks the warning itself, in its own voice for this language.\"\"\"\r\n    return {\"type\": \"warning\", \"text\": langs.LANGS[lang][\"warning\"], \"say\": langs.say_text(lang),\r\n            \"bcp\": langs.LANGS[\"hi-IN\" if lang == \"hi-en\" else lang][\"bcp\"], \"level\": state[\"level\"]}\r\n\r\n\r\n@app.get(\"/api/warning\")\r\ndef warning(lang: str = \"hi-en\"):\r\n    \"\"\"The warning text for one language, so the settings screen can play it once.\"\"\"\r\n    if not langs.valid_lang(lang):\r\n        return JSONResponse({\"error\": \"unknown lang\"}, status_code=400)\r\n    return warning_msg(lang, {\"level\": \"test\"})\r\n\r\n\r\n@app.websocket(\"/ws/listen\")\r\nasync def listen(ws: WebSocket, lang: str = \"hi-en\", family: str = \"\"):\r\n    \"\"\"Browser sends {\"type\": \"line\", \"text\": ...} for each finished sentence it heard, then {\"type\": \"hangup\"}.\"\"\"\r\n    await ws.accept()\r\n    if not langs.valid_lang(lang):\r\n        await ws.close(code=1008, reason=\"bad lang\")\r\n        return\r\n    code = family or None\r\n    risk = CallRisk()\r\n    await fam.publish(code, {\"type\": \"call_start\", \"at\": datetime.now().isoformat(timespec=\"seconds\")})\r\n    started, t0 = datetime.now(), time.monotonic()\r\n    lines: list[dict] = []\r\n    await ws.send_json({\"type\": \"connected\"})\r\n    try:\r\n        while time.monotonic() - t0 < MAX_SESSION_S:\r\n            m = await ws.receive_json()\r\n            if m.get(\"type\") == \"hangup\":\r\n                pack = build_pack(lines, started, lang)\r\n                await ws.send_json({\"type\": \"pack\", **pack})\r\n                await fam.publish(code, {\"type\": \"pack\", **pack})\r\n                await ws.close()\r\n                return\r\n            text = str(m.get(\"text\", \"\")).strip()[:2000] if m.get(\"type\") == \"line\" else \"\"\r\n            if not text or len(lines) >= MAX_LINES:\r\n                continue\r\n            state = risk.feed(text)\r\n            lines.append({\"t\": round(time.monotonic() - t0, 1), \"text\": text, \"risk\": state})\r\n            msg = {\"type\": \"transcript\", \"text\": text, \"risk\": state}\r\n            await ws.send_json(msg)\r\n            await fam.publish(code, msg)\r\n            if state[\"alert\"]:\r\n                warn = warning_msg(lang, state)\r\n                await ws.send_json(warn)\r\n                await fam.publish(code, warn)\r\n        await _safe_send(ws, {\"type\": \"error\", \"message\": \"Session limit of 30 minutes reached.\"})\r\n    except (WebSocketDisconnect, ValueError):\r\n        pass  # browser gone or sent something that is not JSON\r\n    finally:\r\n        await fam.publish(code, {\"type\": \"call_end\"})\r\n\r\n\r\nasync def _gnani_warning(ws: WebSocket, lang: str, state: dict, code: str | None, elder: bool):\r\n    msg = warning_msg(lang, state)\r\n    try:\r\n        msg[\"audio\"] = base64.b64encode(await gnani.tts(gnani.LANGS[lang][\"warning\"], lang, elder=elder)).decode()\r\n    except Exception as e:  # the browser falls back to its own voice\r\n        msg[\"error\"] = str(e)[:200]\r\n    await _safe_send(ws, msg)\r\n    await fam.publish(code, msg)\r\n\r\n\r\n@app.websocket(\"/ws/hear\")\r\nasync def hear(ws: WebSocket, lang: str = \"hi-en\", family: str = \"\", elder: int = 0):\r\n    \"\"\"Browser streams 16 kHz PCM16 frames; Gnani Prisma transcribes; same transcript/warning/pack events as /ws/listen.\"\"\"\r\n    await ws.accept()\r\n    if not langs.valid_lang(lang) or not gnani.api_key():\r\n        await ws.close(code=1008, reason=\"bad lang or no speech key\")\r\n        return\r\n    if GNANI_LIVE.locked():\r\n        await ws.send_json({\"type\": \"busy\"})  # the browser switches to its own speech recognition\r\n        await ws.close()\r\n        return\r\n    async with GNANI_LIVE:\r\n        await _hear(ws, lang, family or None, bool(elder))\r\n\r\n\r\nasync def _hear(ws: WebSocket, lang: str, code: str | None, elder: bool):\r\n    risk = CallRisk()\r\n    await fam.publish(code, {\"type\": \"call_start\", \"at\": datetime.now().isoformat(timespec=\"seconds\")})\r\n    started, t0 = datetime.now(), time.monotonic()\r\n    lines: list[dict] = []\r\n    hung_up = asyncio.Event()\r\n    try:\r\n        asyncio.create_task(gnani.tts(gnani.LANGS[lang][\"warning\"], lang, elder=elder))  # warm the cache: instant alert\r\n        async with websockets.connect(gnani.STT_WS, additional_headers=gnani.stt_headers(lang, \"prisma-v3.0\"),\r\n                                      max_size=None) as up:\r\n            async def browser_to_gnani():\r\n                while True:\r\n                    m = await ws.receive()\r\n                    if m[\"type\"] == \"websocket.disconnect\":\r\n                        return\r\n                    if m.get(\"bytes\"):\r\n                        await up.send(m[\"bytes\"])\r\n                    elif m.get(\"text\") and json.loads(m[\"text\"]).get(\"type\") == \"hangup\":\r\n                        await up.send(json.dumps({\"type\": \"commit\"}))  # flush the last sentence\r\n                        await asyncio.sleep(1.5)\r\n                        hung_up.set()\r\n                        return\r\n\r\n            async def gnani_to_browser():\r\n                async for raw in up:\r\n                    m = json.loads(raw)\r\n                    if m.get(\"type\") == \"transcript\" and m.get(\"text\"):\r\n                        state = risk.feed(m[\"text\"])\r\n                        lines.append({\"t\": round(time.monotonic() - t0, 1), \"text\": m[\"text\"], \"risk\": state})\r\n                        msg = {\"type\": \"transcript\", \"text\": m[\"text\"], \"risk\": state}\r\n                        await ws.send_json(msg)\r\n                        await fam.publish(code, msg)\r\n                        if state[\"alert\"]:\r\n                            asyncio.create_task(_gnani_warning(ws, lang, state, code, elder))\r\n                    elif m.get(\"type\") == \"connected\":\r\n                        await ws.send_json({\"type\": \"connected\"})\r\n\r\n            tasks = [asyncio.create_task(browser_to_gnani()), asyncio.create_task(gnani_to_browser())]\r\n            done, pending = await asyncio.wait(tasks, timeout=GNANI_MAX_S, return_when=asyncio.FIRST_COMPLETED)\r\n            for t in pending:\r\n                t.cancel()\r\n            if not done:\r\n                await _safe_send(ws, {\"type\": \"error\", \"message\": \"Session limit of 10 minutes reached.\"})\r\n        if hung_up.is_set():\r\n            pack = build_pack(lines, started, lang)\r\n            await ws.send_json({\"type\": \"pack\", **pack})\r\n            await fam.publish(code, {\"type\": \"pack\", **pack})\r\n            await ws.close()\r\n    except Exception as e:\r\n        await _safe_send(ws, {\"type\": \"error\", \"message\": f\"Speech service problem: {str(e)[:160]}\"})\r\n    finally:\r\n        await fam.publish(code, {\"type\": \"call_end\"})\r\n\r\n\r\nasync def _safe_send(ws: WebSocket, msg: dict):\r\n    try:\r\n        await ws.send_json(msg)\r\n    except Exception:\r\n        pass  # browser already gone\r\n\r\n\r\napp.mount(\"/\", StaticFiles(directory=ROOT / \"web\", html=True), name=\"web\")\r\n\n```",
+          "is_error": false
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": "Perfect! Now let me check the langs.py to understand what the LANGS structure looks like:",
+      "toolUses": [
+        {
+          "id": "toolu_01BjunwJKZq5S64J23s1K5aE",
+          "name": "read_file",
+          "input": {
+            "path": "backend/langs.py"
+          },
+          "status": "done",
+          "preview": "```\n// backend/langs.py\n\"\"\"Languages Ruko speaks: the browser's speech code and the spoken warning (numbers in spoken fo…"
+        }
+      ],
+      "routingInfo": {
+        "provider": "anthropic",
+        "model": "claude-haiku-4-5-20251001",
+        "trace": [
+          {
+            "signal": "FAST_INTENT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "DEEP_INTENT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "REASONING",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "HUGE_CONTEXT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "LONG_THREAD",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "STACK_TRACE",
+            "matched": false,
+            "evidence": null
+          }
+        ],
+        "decidedReason": "DEFAULT",
+        "isExplicit": false,
+        "speculative": false
+      },
+      "provider": "anthropic",
+      "model": "claude-haiku-4-5-20251001"
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_01BjunwJKZq5S64J23s1K5aE",
+          "content": "```\n// backend/langs.py\n\"\"\"Languages Ruko speaks: the browser's speech code and the spoken warning (numbers in spoken form).\r\n\r\nSpeech recognition and speech output both run in the user's browser (Web Speech API), so the server needs no\r\nspeech API key. The server only scores text.\r\n\"\"\"\r\nimport os\r\nfrom pathlib import Path\r\n\r\nLANGS = {\r\n    \"hi-en\": {\"bcp\": \"hi-IN\", \"warning\": \"Ruko! Yeh call dhokha lag rahi hai. Bank, police ya sarkar kabhi phone par O T P \"\r\n                         \"ya paise nahi maangte. Phone kaat dijiye, aur ek nau teen shunya par call kijiye.\"},\r\n    \"hi-IN\": {\"bcp\": \"hi-IN\", \"warning\": \"रुकिए! यह कॉल धोखा लग रही है। बैंक, पुलिस या सरकार कभी फ़ोन पर ओ टी पी या पैसे नहीं \"\r\n                         \"माँगते। फ़ोन काट दीजिए, और एक नौ तीन शून्य पर कॉल कीजिए।\"},\r\n    \"kn-IN\": {\"bcp\": \"kn-IN\", \"warning\": \"ನಿಲ್ಲಿ! ಇದು ವಂಚನೆಯ ಕರೆ ಅಂತ ಅನಿಸುತ್ತಿದೆ. ಬ್ಯಾಂಕ್, ಪೊಲೀಸ್ ಅಥವಾ ಸರ್ಕಾರ ಯಾವತ್ತೂ ಫೋನಿನಲ್ಲಿ ಒ ಟಿ ಪಿ ಅಥವಾ ಹಣ \"\r\n                         \"ಕೇಳುವುದಿಲ್ಲ. ಕರೆ ಕಟ್ ಮಾಡಿ, ಒಂದು ಒಂಬತ್ತು ಮೂರು ಸೊನ್ನೆಗೆ ಕರೆ ಮಾಡಿ.\"},\r\n    \"te-IN\": {\"bcp\": \"te-IN\", \"warning\": \"ఆగండి! ఇది మోసపు కాల్ లాగా ఉంది. బ్యాంక్, పోలీసులు లేదా ప్రభుత్వం ఎప్పుడూ ఫోన్‌లో ఓ టి పి లేదా డబ్బు \"\r\n                         \"అడగరు. కాల్ కట్ చేసి, ఒకటి తొమ్మిది మూడు సున్నాకి కాల్ చేయండి.\"},\r\n    \"ta-IN\": {\"bcp\": \"ta-IN\", \"warning\": \"நிறுத்துங்கள்! இது மோசடி அழைப்பு போல் தெரிகிறது. வங்கியோ, காவல்துறையோ, அரசாங்கமோ ஒருபோதும் \"\r\n                         \"தொலைபேசியில் ஓ டி பி அல்லது பணம் கேட்காது. அழைப்பைத் துண்டித்து, ஒன்று ஒன்பது மூன்று \"\r\n                         \"பூஜ்ஜியம் என்ற எண்ணை அழையுங்கள்.\"},\r\n    # Marathi, Bengali, Gujarati, Malayalam: warning text drafted without a native review yet.\r\n    \"mr-IN\": {\"bcp\": \"mr-IN\", \"warning\": \"थांबा! हा कॉल फसवणुकीचा वाटतो. बँक, पोलीस किंवा सरकार कधीही फोनवर ओ टी पी किंवा पैसे मागत नाहीत. \"\r\n                         \"फोन कट करा, आणि एक नऊ तीन शून्य वर कॉल करा.\"},\r\n    \"bn-IN\": {\"bcp\": \"bn-IN\", \"warning\": \"থামুন! এই কলটি প্রতারণা মনে হচ্ছে। ব্যাংক, পুলিশ বা সরকার কখনও ফোনে ও টি পি বা টাকা চায় না। \"\r\n                         \"ফোন কেটে দিন, আর এক নয় তিন শূন্যে কল করুন।\"},\r\n    \"gu-IN\": {\"bcp\": \"gu-IN\", \"warning\": \"રોકાઓ! આ કૉલ છેતરપિંડી લાગે છે. બેંક, પોલીસ કે સરકાર ક્યારેય ફોન પર ઓ ટી પી કે પૈસા માંગતી નથી. \"\r\n                         \"ફોન કાપી નાખો, અને એક નવ ત્રણ શૂન્ય પર કૉલ કરો.\"},\r\n    \"ml-IN\": {\"bcp\": \"ml-IN\", \"warning\": \"നിൽക്കൂ! ഈ കോൾ തട്ടിപ്പാണെന്ന് തോന്നുന്നു. ബാങ്കോ പോലീസോ സർക്കാരോ ഒരിക്കലും ഫോണിൽ ഒ ടി പി യോ പണമോ ചോദിക്കില്ല. \"\r\n                         \"ഫോൺ കട്ട് ചെയ്യൂ, ഒന്ന് ഒമ്പത് മൂന്ന് പൂജ്യം എന്ന നമ്പറിൽ വിളിക്കൂ.\"},\r\n    \"en-IN\": {\"bcp\": \"en-IN\", \"warning\": \"Stop! This call looks like a scam. Banks, police and the government never ask for an \"\r\n                         \"O T P or money on the phone. Hang up, and call one nine three zero.\"},\r\n}\r\n\r\n\r\ndef valid_lang(lang: str) -> bool:\r\n    return lang in LANGS\r\n\r\n\r\ndef say_text(lang: str) -> str:\r\n    \"\"\"What the browser voice reads. Hindi voices read Devanagari far better than romanised Hinglish.\"\"\"\r\n    return LANGS[\"hi-IN\" if lang == \"hi-en\" else lang][\"warning\"]\r\n\r\n\r\ndef load_env(path: Path) -> None:\r\n    \"\"\"Minimal .env loader so secrets never have to be typed into code or chat.\"\"\"\r\n    if path.exists():\r\n        for line in path.read_text(encoding=\"utf-8\").splitlines():\r\n            if \"=\" in line and not line.lstrip().startswith(\"#\"):\r\n                k, v = line.split(\"=\", 1)\r\n                os.environ.setdefault(k.strip(), v.strip().strip('\"'))\r\n\n```",
+          "is_error": false
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": "Excellent! Now I understand the structure. The health endpoint returns a dictionary with \"languages\" (list of keys from LANGS dict) and \"engine\" (either \"gnani\" or \"browser\"). Let me check how many languages are currently in LANGS:",
+      "toolUses": [
+        {
+          "id": "toolu_01BHEojatoiAVauvqtukuJJg",
+          "name": "grep_code",
+          "input": {
+            "query": "LANGS = {",
+            "fileGlob": "backend/langs.py"
+          },
+          "status": "done",
+          "preview": "backend\\gnani.py:21: LANGS = {\nbackend\\langs.py:9: LANGS = {\nweb\\ruko.js:10: const UI_LANGS = { en: \"English\", hi: \"हिन्…"
+        }
+      ],
+      "routingInfo": {
+        "provider": "anthropic",
+        "model": "claude-haiku-4-5-20251001",
+        "trace": [
+          {
+            "signal": "FAST_INTENT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "DEEP_INTENT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "REASONING",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "HUGE_CONTEXT",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "LONG_THREAD",
+            "matched": false,
+            "evidence": null
+          },
+          {
+            "signal": "STACK_TRACE",
+            "matched": false,
+            "evidence": null
+          }
+        ],
+        "decidedReason": "DEFAULT",
+        "isExplicit": false,
+        "speculative": false
+      },
+      "provider": "anthropic",
+      "model": "claude-haiku-4-5-20251001"
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "tool_result",
+          "tool_use_id": "toolu_01BHEojatoiAVauvqtukuJJg",
+          "content": "backend\\gnani.py:21: LANGS = {\nbackend\\langs.py:9: LANGS = {\nweb\\ruko.js:10: const UI_LANGS = { en: \"English\", hi: \"हिन्दी\", ta: \"தமிழ்\", te: \"తెలుగు\", kn: \"ಕನ್ನಡ\", mr: \"मराठी\", bn: \"বাংলা\" };",
+          "is_error": false
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "toolUses": []
+    }
+  ]
+}

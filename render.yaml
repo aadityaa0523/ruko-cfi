@@ -2,7 +2,7 @@
 # Secrets are entered in the Render dashboard, never committed.
 services:
   - type: web
-    name: ruko
+    name: ruko-cfi
     runtime: python
     plan: free
     buildCommand: pip install -r requirements.txt
