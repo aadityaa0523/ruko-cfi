@@ -38,8 +38,8 @@
         }
       ],
       "routingInfo": {
-        "provider": "anthropic",
-        "model": "claude-haiku-4-5-20251001",
+        "provider": "agentfoundry",
+        "model": "agentfoundry-model",
         "trace": [
           {
             "signal": "FAST_INTENT",
@@ -76,8 +76,8 @@
         "isExplicit": false,
         "speculative": false
       },
-      "provider": "anthropic",
-      "model": "claude-haiku-4-5-20251001"
+      "provider": "agentfoundry",
+      "model": "agentfoundry-model"
     },
     {
       "role": "user",
@@ -126,8 +126,8 @@
         }
       ],
       "routingInfo": {
-        "provider": "anthropic",
-        "model": "claude-haiku-4-5-20251001",
+        "provider": "agentfoundry",
+        "model": "agentfoundry-model",
         "trace": [
           {
             "signal": "FAST_INTENT",
@@ -164,8 +164,8 @@
         "isExplicit": false,
         "speculative": false
       },
-      "provider": "anthropic",
-      "model": "claude-haiku-4-5-20251001"
+      "provider": "agentfoundry",
+      "model": "agentfoundry-model"
     },
     {
       "role": "user",
@@ -199,8 +199,8 @@
         }
       ],
       "routingInfo": {
-        "provider": "anthropic",
-        "model": "claude-haiku-4-5-20251001",
+        "provider": "agentfoundry",
+        "model": "agentfoundry-model",
         "trace": [
           {
             "signal": "FAST_INTENT",
@@ -237,8 +237,8 @@
         "isExplicit": false,
         "speculative": false
       },
-      "provider": "anthropic",
-      "model": "claude-haiku-4-5-20251001"
+      "provider": "agentfoundry",
+      "model": "agentfoundry-model"
     },
     {
       "role": "user",
@@ -267,8 +267,8 @@
         }
       ],
       "routingInfo": {
-        "provider": "anthropic",
-        "model": "claude-haiku-4-5-20251001",
+        "provider": "agentfoundry",
+        "model": "agentfoundry-model",
         "trace": [
           {
             "signal": "FAST_INTENT",
@@ -305,8 +305,8 @@
         "isExplicit": false,
         "speculative": false
       },
-      "provider": "anthropic",
-      "model": "claude-haiku-4-5-20251001"
+      "provider": "agentfoundry",
+      "model": "agentfoundry-model"
     },
     {
       "role": "user",

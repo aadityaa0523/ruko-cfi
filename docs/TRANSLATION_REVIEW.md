@@ -1,6 +1,6 @@
 # Translation review sheet
 
-**Status (10 Nov 2026):** every spoken warning has been (1) reviewed for grammar and natural phrasing by Claude (an AI, not a native speaker) and (2) checked by machine with a text-to-speech then speech-to-text round trip, in which every word came back correctly in all 10 languages. **No native speaker has signed off yet.** Each one takes about 2 minutes: read it aloud, tick the boxes, write fixes in the last column.
+**Status (10 Nov 2026):** every spoken warning has been (1) reviewed for grammar and natural phrasing by AgentFoundry AI (an AI, not a native speaker) and (2) checked by machine with a text-to-speech then speech-to-text round trip, in which every word came back correctly in all 10 languages. **No native speaker has signed off yet.** Each one takes about 2 minutes: read it aloud, tick the boxes, write fixes in the last column.
 
 All warnings say the same thing: *"Stop! This call looks like a scam. Banks, police or the government never ask for an OTP or money on the phone. Hang up and call 1930."*
 
@@ -16,7 +16,7 @@ All warnings say the same thing: *"Stop! This call looks like a scam. Banks, pol
 | Malayalam | നിൽക്കൂ! ഈ കോൾ തട്ടിപ്പാണെന്ന് തോന്നുന്നു. ബാങ്കോ പോലീസോ സർക്കാരോ ഒരിക്കലും ഫോണിൽ ഒ ടി പി യോ പണമോ ചോദിക്കില്ല. ഫോൺ കട്ട് ചെയ്യൂ, ഒന്ന് ഒമ്പത് മൂന്ന് പൂജ്യം എന്ന നമ്പറിൽ വിളിക്കൂ. | none | ☐ | ☐ | |
 
 ## Hindi consent form (`PILOT_KIT.md`)
-Reviewed by Claude for grammar and for matching the app: the button name "इस कॉल को सुरक्षित करें" is exactly what the Hindi app shows. ☐ Native reviewer: _______
+Reviewed by AgentFoundry AI for grammar and for matching the app: the button name "इस कॉल को सुरक्षित करें" is exactly what the Hindi app shows. ☐ Native reviewer: _______
 
 ## How to get it checked fast
 Send each person their row on WhatsApp with a screen recording of the sample scam call in that language (pick the language in the app, tap "Try a sample scam call") and ask: "Would your grandmother understand this immediately? Anything that sounds odd?" One reply per language is enough for the pilot.
