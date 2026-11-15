@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Share Ruko · Ruko</title>
+<meta name="description" content="Ready-made WhatsApp messages in 7 languages to share Ruko's 2-minute spot-the-scam test and message checker with family and friends.">
+<meta name="theme-color" content="#26282b">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/ruko.css?v=60">
+<link rel="stylesheet" href="/legal.css?v=30">
+<style>
+  .card { border: 1px solid var(--line, #d0d4da); border-radius: 12px; padding: 14px 16px; margin: 12px 0; }
+  .card h3 { margin: 0 0 6px; font-size: 1rem; }
+  .card p.msg { margin: 0 0 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tabs { display: flex; gap: 8px; margin: 10px 0 0; flex-wrap: wrap; }
+  .tabs button[aria-pressed="true"] { outline: 3px solid currentColor; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<header class="bar"><div class="bar-row">
+  <a class="logo" href="/" aria-label="Ruko home"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M30 2h40l28 28v40L70 98H30L2 70V30z" fill="#c8102e"/><path d="M31.7 9h36.6L91 31.7v36.6L68.3 91H31.7L9 68.3V31.7z" fill="none" stroke="#fff" stroke-width="5"/></svg>Ruko</a>
+  <nav aria-label="Ruko"><a href="/quiz/">Spot-the-scam test</a><a href="/check/">Check a message</a><a href="/impact/">Results</a></nav>
+</div></header>
+
+<main class="doc">
+  <h1>Share Ruko with the people you care about</h1>
+  <p>Scammers rely on people being alone and in a hurry. A message in a family group can be the thing that makes someone stop. Pick a language, tap <b>Send on WhatsApp</b>, and choose a family or friends group.</p>
+  <p class="small muted">Please send it only to people you know, and only where it is welcome. Everyone who takes the test is counted anonymously on the <a href="/impact/">impact page</a>; no names, numbers or messages are stored.</p>
+
+  <h2>What to share</h2>
+  <div class="tabs" role="group" aria-label="What to share">
+    <button type="button" class="btn btn-plain" id="tabQuiz" aria-pressed="true">The 2-minute test</button>
+    <button type="button" class="btn btn-plain" id="tabCheck" aria-pressed="false">The message checker</button>
+  </div>
+  <div id="cards"></div>
+</main>
+<footer id="siteFooter"></footer>
+<script src="/config.js?v=60"></script>
+<script src="/ruko.js?v=60"></script>
+<script src="/footer.js?v=60"></script>
+<script src="share.js?v=1"></script>
+</body>
+</html>
