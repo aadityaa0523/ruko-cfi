@@ -1,0 +1,25 @@
+{
+  "messages": 120,
+  "scams": 60,
+  "genuine": 60,
+  "caught": 54,
+  "missed": 6,
+  "false_alarms": 5,
+  "precision": 0.915,
+  "recall": 0.9,
+  "missed_kinds": [
+    "gift_parcel",
+    "instant_loan_fee",
+    "pm_kisan_form",
+    "reward_points",
+    "scholarship",
+    "relative_trouble"
+  ],
+  "false_alarm_kinds": [
+    "delivery_otp (suspicious)",
+    "food_delivery_otp (suspicious)",
+    "ride_otp (suspicious)",
+    "bank_otp (scam)",
+    "ride_otp (suspicious)"
+  ]
+}

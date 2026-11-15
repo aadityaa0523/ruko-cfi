@@ -1,6 +1,7 @@
 """Optional speech engine: Gnani Vachana Prisma STT (realtime WS) and Timbre TTS (REST).
 
 Used only when GNANI_API_KEY is set; without it Ruko uses the browser's own speech recognition and voice."""
+import asyncio
 import os
 import re
 from pathlib import Path
@@ -152,7 +153,11 @@ async def tts(text: str, lang: str, whisper: bool = False, telephony: bool = Fal
         return _TTS_CACHE[key]
     body = _tts_body(text, lang, whisper, telephony, elder, voice)
     async with httpx.AsyncClient(timeout=30) as client:
-        r = await client.post(TTS_URL, json=body, headers={"X-API-Key-ID": api_key()})
+        for attempt in range(4):  # the account allows one active TTS request at a time: wait and retry on 429
+            r = await client.post(TTS_URL, json=body, headers={"X-API-Key-ID": api_key()})
+            if r.status_code != 429:
+                break
+            await asyncio.sleep(1.5 * (attempt + 1))
     if r.status_code != 200:
         raise RuntimeError(f"Timbre {r.status_code}: {r.text[:300]}")
     audio = r.content
