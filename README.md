@@ -33,7 +33,7 @@ Every number below, with its source and what it does not prove, is on the site: 
 - **Why that undercounts:** in a 2025 LocalCircles survey of 32,000+ UPI users, **1 in 5** had faced fraud in three years and **51% of them never filed a complaint**. An earlier LocalCircles survey (May 2023, 32,000 responses from 331 districts) found **39% of families** had been hit by online financial fraud, and 70% of those who complained got no resolution. These are surveys, not a census, and we do not extrapolate them to a national total.
 - **Who is exposed to the phone-call version:** **135.4 crore** telephone connections (TRAI, July 2026), and especially the **14.9 crore** Indians aged 60+ (UNFPA India Ageing Report 2023).
 - **Beyond money:** elders have died after losing their savings to "digital arrest" calls (a Belagavi couple in March 2025; a Pune retired officer who lost ₹1.19 crore in October 2025), and an IIT Madras study of 33 victims found shame, insomnia and depression. Cases and sources are listed on the problem page. Only 24% of fraud-hit families in the 2023 LocalCircles survey got their money back.
-- **The loss:** **₹22,845.73 crore** in 2024, up 206% in a year, about ₹62,800 per reported incident. Fake "digital arrest" calls alone took **₹1,935.51 crore** across **1,23,672** complaints, about ₹1.56 lakh each (MHA, Rajya Sabha reply).
+- **The loss:** **₹22,845.73 crore** in 2024, up 206% in a year, about ₹62,800 per reported incident, roughly 3.7 months of an average Indian's income (per-capita NNI about ₹2.05 lakh, 2024-25, MoSPI). Fake "digital arrest" calls alone took **₹1,935.51 crore** across **1,23,672** complaints, about ₹1.56 lakh each, roughly 9 months of average income (MHA, Rajya Sabha reply).
 
 ## What Ruko does
 
@@ -45,6 +45,7 @@ Every number below, with its source and what it does not prove, is on the site: 
 | 👨‍👩‍👧 | **Family Shield:** the family's phone turns red live, with what was said and what to do; push alerts even when the page is closed | WebSockets + Web Push |
 | 📝 | **After the call:** a ready 1930 / cybercrime.gov.in complaint, a one-tap number report, a ready report for DoT's **Chakshu** | Template-based, so it never invents facts |
 | 🔎 | **Every day:** check any SMS, WhatsApp forward, link, UPI request or number; community **Scam Radar** | Rules + Supabase |
+| ☎️ | **Keypad phones:** merge the call with Ruko's number; the warning plays inside the call | Twilio Media Streams + Gnani (simulator-tested) |
 | 🤖 | **Android:** warns before you pick up, from community reports | `CallScreeningService` ([`android/`](android)) |
 | 🏦 | **Scoring API:** banks and UPI apps score a live call before money moves | `POST /v1/score` |
 
@@ -109,6 +110,16 @@ Deploy anywhere that runs Python with WebSockets; [`render.yaml`](render.yaml) i
 - `POST /v1/score` (header `X-Ruko-Key`; the key `demo` works for up to 20 lines): returns `level`, `score`, `flags`, `playbook` for transcript lines.
 - `POST /api/check`: message/link/UPI/number verdict (rules only, nothing stored).
 - `POST/GET/DELETE /api/family/voice`: a family member's consented 5–30 s recording of the warning (memory only, deletable).
+</details>
+
+<details>
+<summary><b>Keypad-phone line (Twilio)</b></summary>
+
+For a basic phone: the user merges a suspicious call with Ruko's phone number. Twilio streams the call's 8 kHz audio to `/twilio/stream`; Gnani Prisma transcribes it; on an alert, Gnani Timbre speaks the warning **inside the call**, and the 1930 report appears in the family's app (`/api/calls?c=<family code>`, never shown without that code).
+
+Setup: deploy over HTTPS, set `RUKO_PUBLIC_URL` and `TWILIO_AUTH_TOKEN` (so only Twilio-signed requests can start a session), and point a Twilio number's voice webhook to `POST https://<your-site>/twilio/voice?lang=hi-en&family=<family code>`.
+
+Tested end to end with a Twilio-protocol simulator (`python -m eval.twilio_sim_call`): Ruko announced itself, spoke the warning into the call about 3.5 s after "kisi ko mat batana", and the report scored critical (92/100). **Not yet tried on a real phone network.**
 </details>
 
 <details>

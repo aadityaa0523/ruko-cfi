@@ -81,6 +81,12 @@
       <p class="muted small" data-i18n="try_p">Plays a written, made-up call through Ruko so you can see what happens. Your Family Shield screen sees it too.</p>
       <div class="row"><select id="script" aria-label="Sample call"></select><button class="btn btn-primary" id="runScript" type="button" data-i18n="play">Play</button></div>
     </details>
+    <details class="panel">
+      <summary data-i18n="keypad">Calls on a keypad phone</summary>
+      <p class="muted small" data-i18n="keypad_p">On a basic phone, merge the call with Ruko's phone number. Ruko listens on the line, warns inside the call, and the report appears here for your family link.</p>
+      <ul class="calls" id="calls"></ul>
+      <button class="btn btn-plain" id="refreshCalls" type="button" data-i18n="refresh">Refresh</button>
+    </details>
   </section>
 
   <p class="muted small foot" data-i18n="foot">Ruko only warns. It never blocks calls and never stores call audio. Lost money? Call 1930.</p>

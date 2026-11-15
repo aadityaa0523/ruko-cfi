@@ -31,6 +31,7 @@ from backend.check import check_text
 from backend.pack import build_pack
 from backend.risk import CallRisk
 from backend.scripts import SAFE, SCAM
+from backend.telephony import router as telephony_router
 
 ROOT = Path(__file__).resolve().parent.parent
 mimetypes.add_type("application/manifest+json", ".webmanifest")
@@ -43,6 +44,7 @@ GNANI_LIVE = asyncio.Semaphore(3)  # one paid key: cap parallel Gnani sessions a
 GNANI_MAX_S = 600
 MAX_LINES = 600
 app.include_router(fam.router)
+app.include_router(telephony_router)  # keypad-phone line (Twilio)
 
 
 @app.get("/api/health")
@@ -118,11 +120,17 @@ def warning_msg(lang: str, state: dict) -> dict:
 
 
 @app.get("/api/warning")
-def warning(lang: str = "hi-en"):
-    """The warning text for one language, so the settings screen can play it once."""
+async def warning(lang: str = "hi-en", elder: int = 0):
+    """The warning for one language, so the settings screen can play it once (with Gnani's voice when a key is set)."""
     if not langs.valid_lang(lang):
         return JSONResponse({"error": "unknown lang"}, status_code=400)
-    return warning_msg(lang, {"level": "test"})
+    msg = warning_msg(lang, {"level": "test"})
+    if gnani.api_key():
+        try:
+            msg["audio"] = base64.b64encode(await gnani.tts(gnani.LANGS[lang]["warning"], lang, elder=bool(elder))).decode()
+        except Exception:
+            pass  # the browser speaks it instead
+    return msg
 
 
 @app.websocket("/ws/listen")

@@ -5,7 +5,7 @@ window.STRINGS = {
     protect: "Protect this call", listening: "Listening…", connecting: "Connecting…", sample: "Sample call",
     hint: "Put the call on speaker and keep this device next to it, then tap. Phones can't share the microphone during a call, so open Ruko in Chrome on a second phone, tablet or laptop.",
     listening_hint: "Keep the call on speaker, close to this device.", connecting_hint: "Starting to listen…",
-    sample_hint: "Playing a made-up scam call…", making_report: "Making your report…", problem: "Problem: ",
+    sample_hint: "Playing a made-up scam call…", no_calls: "No keypad-phone calls yet.", making_report: "Making your report…", problem: "Problem: ",
     need_mic: "Ruko needs the microphone to hear the call. Allow it and tap again.",
     no_rec: "Live listening needs Chrome (Android, Windows or Mac). Sample calls and message checks work everywhere.", no_net: "speech recognition needs the internet.",
     audio_deleted: "No call audio was stored. Only the words were checked.",
@@ -325,7 +325,7 @@ $("hangup").onclick = () => {
 };
 
 $("testVoice").onclick = async () => {
-  const m = await (await fetch(`/api/warning?lang=${$("lang").value}`)).json();
+  const m = await (await fetch(`/api/warning?lang=${$("lang").value}&elder=${$("elder").checked ? 1 : 0}`)).json();
   await loadFamilyVoice();
   speakWarning(m);
 };
@@ -416,6 +416,28 @@ $("copy").onclick = async () => {
   catch { $("copy").textContent = t("select_copy"); }
   setTimeout(() => ($("copy").textContent = t("copy")), 2500);
 };
+
+// ---------- keypad-phone calls Ruko joined over the phone network (only this family's)
+async function loadCalls() {
+  let calls = [];
+  try { calls = await (await fetch(`/api/calls?c=${familyCode}`)).json(); } catch {}
+  $("calls").innerHTML = "";
+  if (!calls.length) {
+    const li = document.createElement("li"); li.className = "muted small"; li.textContent = t("no_calls");
+    return $("calls").append(li);
+  }
+  for (const p of calls) {
+    const li = document.createElement("li");
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "btn";
+    b.textContent = `${p.complaint.incident_datetime}: ${LEVEL[LANG]?.[p.level] ?? LEVEL.en[p.level]} (${p.score}/100)`;
+    b.onclick = () => showPack(p);
+    li.append(b);
+    $("calls").append(li);
+  }
+}
+$("refreshCalls").onclick = loadCalls;
+loadCalls();
 
 $("playFamily").onclick = () => { speaking = false; say(lastPack.family_alert, "en-IN"); };
 

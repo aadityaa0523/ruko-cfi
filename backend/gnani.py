@@ -10,6 +10,7 @@ import httpx
 
 STT_WS = "wss://api.vachana.ai/stt/v3/stream"
 TTS_URL = "https://api.vachana.ai/api/v1/tts/inference"
+TTS_SSE = "https://api.vachana.ai/api/v1/tts/sse"
 
 # Scam vocabulary Prisma v3.0 should recognise reliably (keyterms, max 200).
 KEYTERMS = [
@@ -134,6 +135,20 @@ def _tts_body(text: str, lang: str, whisper: bool, telephony: bool, elder: bool,
     return body
 
 
+def pcm16_to_ulaw(pcm: bytes) -> bytes:
+    """G.711 mu-law encoder (16-bit little-endian PCM in)."""
+    import array
+    a = array.array("h")
+    a.frombytes(pcm[: len(pcm) // 2 * 2])
+    out = bytearray(len(a))
+    for i, s in enumerate(a):
+        sign = 0x80 if s < 0 else 0
+        s = min(-s if s < 0 else s, 32635) + 132
+        exp = max(0, (s >> 7).bit_length() - 1)
+        out[i] = ~(sign | exp << 4 | (s >> (exp + 3)) & 0x0F) & 0xFF
+    return bytes(out)
+
+
 def _cache_key(text, lang, whisper, telephony, elder, voice):
     return (text, lang, whisper, telephony, elder, voice["embedding"][:64] if voice else None)
 
@@ -160,9 +175,45 @@ async def tts(text: str, lang: str, whisper: bool = False, telephony: bool = Fal
             await asyncio.sleep(1.5 * (attempt + 1))
     if r.status_code != 200:
         raise RuntimeError(f"Timbre {r.status_code}: {r.text[:300]}")
-    audio = r.content
+    audio = pcm16_to_ulaw(r.content) if voice and telephony else r.content
     _remember(key, audio)
     return audio
+
+
+async def tts_stream(text: str, lang: str, telephony: bool = True, voice: dict | None = None):
+    """Timbre over SSE: yields audio chunks as they are made, so a phone call hears the warning sooner.
+    Cached audio is yielded at once."""
+    import base64
+    import json as _json
+    key = _cache_key(text, lang, False, telephony, False, voice)
+    if key in _TTS_CACHE:
+        yield _TTS_CACHE[key]
+        return
+    body = _tts_body(text, lang, False, telephony, False, voice)
+    got, carry = bytearray(), b""
+    encode = bool(voice and telephony)
+    async with httpx.AsyncClient(timeout=30) as client:
+        async with client.stream("POST", TTS_SSE, json=body, headers={"X-API-Key-ID": api_key()}) as r:
+            if r.status_code != 200:
+                raise RuntimeError(f"Timbre SSE {r.status_code}: {(await r.aread())[:300]!r}")
+            event = ""
+            async for line in r.aiter_lines():
+                if line.startswith("event:"):
+                    event = line[6:].strip()
+                elif line.startswith("data:"):
+                    data = _json.loads(line[5:])
+                    if event == "error":
+                        raise RuntimeError(f"Timbre SSE: {data.get('message')}")
+                    if data.get("audio"):
+                        chunk = base64.b64decode(data["audio"])
+                        if encode:  # keep whole 16-bit samples across chunk borders
+                            chunk, carry = carry + chunk, b""
+                            if len(chunk) % 2:
+                                chunk, carry = chunk[:-1], chunk[-1:]
+                            chunk = pcm16_to_ulaw(chunk)
+                        got.extend(chunk)
+                        yield chunk
+    _remember(key, bytes(got))
 
 
 _TTS_CACHE: dict[tuple, bytes] = {}
