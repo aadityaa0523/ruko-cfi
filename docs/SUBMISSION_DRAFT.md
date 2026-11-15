@@ -95,6 +95,7 @@ https://github.com/aadityaa0523/ruko-cfi
 ---
 
 ### **Demo URL**
+* **Video Demo (YouTube):** https://youtu.be/diCsu22Ni4k *(2-minute end-to-end walkthrough showing real-time scam interception)*
 * **Live Web App:** https://ruko-cfi.onrender.com *(Runs in any modern browser, desktop or mobile. Please allow 30–60s on first load if server is waking from idle).*
 * **Live Impact & Telemetry Dashboard:** https://ruko-cfi.onrender.com/impact/
 * **Spot-the-Scam Interactive Test:** https://ruko-cfi.onrender.com/quiz/
