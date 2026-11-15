@@ -66,19 +66,19 @@ language sql security definer set search_path to '' stable as $$
     'devices', (select count(distinct device) from public.impact_events),
     'networks', (select count(distinct net) from public.impact_events),
     'by_kind', coalesce((select json_object_agg(kind, n) from
-        (select kind, count(*) n from public.impact_events group by kind) k), '{}'::json),
+        (select kind, count(*) as n from public.impact_events group by kind) k), '{}'::json),
     'devices_by_kind', coalesce((select json_object_agg(kind, n) from
-        (select kind, count(distinct device) n from public.impact_events group by kind) k), '{}'::json),
+        (select kind, count(distinct device) as n from public.impact_events group by kind) k), '{}'::json),
     'verdicts', coalesce((select json_object_agg(level, n) from
-        (select coalesce(level, 'unknown') level, count(*) n from public.impact_events
+        (select coalesce(level, 'unknown') as level, count(*) as n from public.impact_events
          where kind = 'message_check' group by 1) v), '{}'::json),
     'outcomes', coalesce((select json_object_agg(level, n) from
-        (select coalesce(level, 'unknown') level, count(*) n from public.impact_events
+        (select coalesce(level, 'unknown') as level, count(*) as n from public.impact_events
          where kind = 'outcome' group by 1) o), '{}'::json),
     'languages', coalesce((select json_object_agg(lang, n) from
-        (select coalesce(lang, 'unknown') lang, count(distinct device) n from public.impact_events group by 1) l), '{}'::json),
+        (select coalesce(lang, 'unknown') as lang, count(distinct device) as n from public.impact_events group by 1) l), '{}'::json),
     'daily', coalesce((select json_agg(d order by d.day) from
-        (select (created_at at time zone 'Asia/Kolkata')::date day, count(*) events, count(distinct device) devices
+        (select (created_at at time zone 'Asia/Kolkata')::date as day, count(*) as events, count(distinct device) as devices
          from public.impact_events where created_at > now() - interval '60 days' group by 1) d), '[]'::json),
     -- paired quiz scores (same device, before and after), plus which question set came first
     'quiz', coalesce((select json_agg(json_build_array(b.score, a.score, b.level)) from public.impact_events b
