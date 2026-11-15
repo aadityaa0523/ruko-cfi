@@ -17,6 +17,10 @@ Speech runs on **Gnani AI** (Prisma for recognition, Timbre for the spoken warni
 
 Built for **Code for a Billion: Bharat Agentic-AI Hackathon 2026** (Code for India).
 
+**[Live app](https://ruko-cfi.onrender.com)** · **[Spot-the-scam test](https://ruko-cfi.onrender.com/quiz/)** · **[Live impact](https://ruko-cfi.onrender.com/impact/)**
+
+<sub>Free hosting: the first visit after a quiet period can take up to a minute to wake.</sub>
+
 </div>
 
 ---
