@@ -42,3 +42,9 @@ def test_links_and_numbers():
     assert norm_phone("+91 98765 43210") == "9876543210"
     r = check_text(SCAMS["electricity"])
     assert r["phones"] == ["9876543210"]
+
+
+def test_check_page_example_is_flagged():
+    # the example shown in the check page's text box must not come back "safe"
+    r = check_text("Your electricity will be cut tonight at 9.30 PM. Call officer 9876543210 immediately")
+    assert r["verdict"] == "scam"

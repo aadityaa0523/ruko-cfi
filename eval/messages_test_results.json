@@ -2,11 +2,11 @@
   "messages": 100,
   "scams": 50,
   "genuine": 50,
-  "caught": 36,
-  "missed": 14,
+  "caught": 37,
+  "missed": 13,
   "false_alarms": 3,
-  "precision": 0.923,
-  "recall": 0.72,
+  "precision": 0.925,
+  "recall": 0.74,
   "missed_kinds": [
     "refund_upi",
     "task_job",
@@ -19,7 +19,6 @@
     "olx_army",
     "job_fee",
     "insurance_bonus",
-    "electricity",
     "kyc_wallet",
     "instant_loan"
   ],
